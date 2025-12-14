@@ -3,9 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminDashboardController;
-// use App\Http\Controllers\Admin\BookController;
-// use App\Http\Controllers\Admin\MetadataController;
-// use App\Http\Controllers\Admin\JsonLDValidatorController;
+use App\Http\Controllers\Admin\BookController;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -30,18 +29,19 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('dashboard');
 
-        // Mengelola Buku
-        // Route::resource('/books', BookController::class);
+        // Buku
+        Route::get('books', [BookController::class, 'index'])->name('books.index');
+        Route::post('books', [BookController::class, 'store'])->name('books.store');
+        Route::get('books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
+        Route::put('books/{book}', [BookController::class, 'update'])->name('books.update');
+        Route::delete('books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
 
-        // Mengelola Metadata JSON-LD
-        // Route::get('/metadata', [MetadataController::class, 'index'])->name('metadata.index');
-        // Route::post('/metadata/{book}/update', [MetadataController::class, 'update'])->name('metadata.update');
-
-        // Validasi JSON-LD
-        // Route::get('/jsonld-validator', [JsonLDValidatorController::class, 'index'])
-        //     ->name('jsonld.validator');
-        // Route::post('/jsonld-validator/check', [JsonLDValidatorController::class, 'check'])
-        //     ->name('jsonld.validator.check');
+        // Kategori
+        Route::get('categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::post('categories', [CategoryController::class, 'store'])->name('categories.store');
+        Route::get('categories/{category}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+        Route::put('categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
+        Route::delete('categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy');
     });
 
 require __DIR__ . '/auth.php';
