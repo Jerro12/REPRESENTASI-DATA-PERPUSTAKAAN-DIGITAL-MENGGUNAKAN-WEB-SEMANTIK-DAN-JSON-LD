@@ -20,7 +20,10 @@
                     <tr class="bg-gray-100">
                         <th class="px-4 py-2">No</th>
                         <th class="px-4 py-2">Nama Kategori</th>
+                        <th class="px-4 py-2">Tipe Koleksi</th>
                         <th class="px-4 py-2">Deskripsi</th>
+                        <th class="px-4 py-2">About / Genre</th>
+                        <th class="px-4 py-2">Status</th>
                         <th class="px-4 py-2">Aksi</th>
                     </tr>
                 </thead>
@@ -29,7 +32,16 @@
                         <tr class="border-t">
                             <td class="px-4 py-2">{{ $index + 1 }}</td>
                             <td class="px-4 py-2">{{ $category->nama }}</td>
+                            <td class="px-4 py-2">{{ $category->collection_type }}</td>
                             <td class="px-4 py-2">{{ $category->deskripsi ?? '-' }}</td>
+                            <td class="px-4 py-2">{{ $category->schema_about ?? '-' }}</td>
+                            <td class="px-4 py-2">
+                                @if($category->is_active)
+                                    <span class="text-green-600 font-semibold">Aktif</span>
+                                @else
+                                    <span class="text-red-600 font-semibold">Nonaktif</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-2 flex gap-2">
                                 {{-- Tombol Edit --}}
                                 <x-secondary-button type="button" class="btn btn-sm btn-warning"
@@ -37,18 +49,11 @@
                                     Edit
                                 </x-secondary-button>
 
-                                @foreach($categories as $category)
-                                    {{-- Tombol Hapus --}}
-                                    <x-primary-button
-                                        x-on:click="$dispatch('open-modal', 'hapusCategoryModal-{{ $category->id }}')">
-                                        Hapus
-                                    </x-primary-button>
-
-                                    {{-- Modal Hapus --}}
-                                    <x-modal name="hapusCategoryModal-{{ $category->id }}" maxWidth="sm">
-                                        @include('admin.category.partials.delete', ['category' => $category])
-                                    </x-modal>
-                                @endforeach
+                                {{-- Tombol Hapus --}}
+                                <x-primary-button type="button"
+                                    x-on:click="$dispatch('open-modal', 'hapusCategoryModal-{{ $category->id }}')">
+                                    Hapus
+                                </x-primary-button>
                             </td>
                         </tr>
 
@@ -56,9 +61,14 @@
                         <x-modal name="editCategoryModal-{{ $category->id }}" :show="false" maxWidth="2xl">
                             @include('admin.category.partials.edit', ['category' => $category])
                         </x-modal>
+
+                        {{-- Modal Hapus per kategori --}}
+                        <x-modal name="hapusCategoryModal-{{ $category->id }}" maxWidth="sm">
+                            @include('admin.category.partials.delete', ['category' => $category])
+                        </x-modal>
                     @empty
                         <tr>
-                            <td colspan="4" class="text-center py-4 text-gray-500">
+                            <td colspan="7" class="text-center py-4 text-gray-500">
                                 Belum ada kategori.
                             </td>
                         </tr>

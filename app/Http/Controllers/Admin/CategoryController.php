@@ -14,7 +14,6 @@ class CategoryController extends Controller
         // Ambil semua kategori terbaru
         $categories = Category::latest()->get();
 
-        // Sesuaikan view path dengan folder sebenarnya
         return view('admin.category.index', compact('categories'));
     }
 
@@ -23,30 +22,44 @@ class CategoryController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255|unique:categories,nama',
             'deskripsi' => 'nullable|string',
+            'collection_type' => 'required|in:Book,ScholarlyArticle',
+            'schema_about' => 'nullable|string|max:255',
+            // 'is_active' => 'nullable|boolean',
         ]);
 
         Category::create([
             'nama' => $request->nama,
             'slug' => Str::slug($request->nama),
             'deskripsi' => $request->deskripsi,
+            'collection_type' => $request->collection_type,
+            'schema_about' => $request->schema_about,
+            'is_active' => 1,
         ]);
 
         return redirect()
             ->route('admin.categories.index')
             ->with('success', 'Kategori berhasil ditambahkan');
     }
-
     public function update(Request $request, Category $category)
     {
         $request->validate([
             'nama' => 'required|string|max:255|unique:categories,nama,' . $category->id,
             'deskripsi' => 'nullable|string',
+
+            // kolom tambahan
+            'collection_type' => 'required|in:Book,ScholarlyArticle',
+            'schema_about' => 'nullable|string|max:255',
+            'is_active' => 'nullable|boolean',
         ]);
 
         $category->update([
             'nama' => $request->nama,
             'slug' => Str::slug($request->nama),
             'deskripsi' => $request->deskripsi,
+
+            'collection_type' => $request->collection_type,
+            'schema_about' => $request->schema_about,
+            'is_active' => $request->boolean('is_active'),
         ]);
 
         return redirect()

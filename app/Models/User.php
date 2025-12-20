@@ -45,4 +45,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function favoriteBooks()
+    {
+        return $this->belongsToMany(Book::class, 'book_user')->withTimestamps();
+    }
 }

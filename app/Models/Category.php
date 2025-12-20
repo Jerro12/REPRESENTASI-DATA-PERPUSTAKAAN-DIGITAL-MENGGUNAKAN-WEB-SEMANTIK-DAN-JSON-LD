@@ -15,7 +15,11 @@ class Category extends Model
         'nama',
         'slug',
         'deskripsi',
+        'collection_type',
+        'schema_about',
+        'is_active',
     ];
+
 
     /**
      * Relasi: satu kategori memiliki banyak buku

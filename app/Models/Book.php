@@ -29,11 +29,24 @@ class Book extends Model
         'jumlah_halaman',
     ];
 
-    /**
-     * Relasi: satu buku milik satu kategori
-     */
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    // Accessor untuk JSON-LD
+    public function getCollectionTypeAttribute()
+    {
+        return $this->category ? $this->category->collection_type : null;
+    }
+
+    public function getSchemaAboutAttribute()
+    {
+        return $this->subjek ?? ($this->category ? $this->category->schema_about : null);
+    }
+
+    public function favoredByUsers()
+    {
+        return $this->belongsToMany(User::class, 'book_user')->withTimestamps();
     }
 }
