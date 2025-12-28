@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-semibold text-xl text-[#1dc2fe] leading-tight">
             {{ $book->judul ?? 'Detail Buku' }}
         </h2>
     </x-slot>
@@ -9,13 +9,15 @@
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <!-- Card Detail Buku -->
-            <div class="bg-white shadow-sm rounded-lg p-6">
+            <div class="bg-[#094054] shadow-sm rounded-lg p-6 text-[#cbd5e1]">
+
                 <!-- Cover -->
                 <div class="mb-6 flex justify-center">
                     @if($book->cover)
-                        <img src="{{ asset($book->cover) }}" alt="{{ $book->judul }}" class="h-64 object-contain">
+                        <img src="{{ asset($book->cover) }}" alt="{{ $book->judul }}" class="h-64 object-contain rounded">
                     @else
-                        <div class="h-64 w-full bg-gray-100 rounded flex items-center justify-center text-gray-400">
+                        <div
+                            class="h-64 w-full bg-[#081e26] rounded flex items-center justify-center text-[#cbd5e1] text-sm">
                             Cover Buku
                         </div>
                     @endif
@@ -23,15 +25,15 @@
 
                 <!-- Info Buku -->
                 <div class="space-y-2">
-                    <h1 class="text-2xl font-bold text-gray-800">{{ $book->judul }}</h1>
-                    <p class="text-gray-600">Penulis: {{ $book->penulis ?? '-' }}</p>
-                    <p class="text-gray-600">Penerbit: {{ $book->penerbit ?? '-' }}</p>
-                    <p class="text-gray-600">Tahun Terbit: {{ $book->tahun_terbit ?? '-' }}</p>
-                    <p class="text-gray-600">Kategori: {{ $book->category->nama ?? '-' }}</p>
-                    <p class="text-gray-600">Bahasa: {{ $book->bahasa ?? '-' }}</p>
-                    <p class="text-gray-600">Jumlah Halaman: {{ $book->jumlah_halaman ?? '-' }}</p>
+                    <h1 class="text-2xl font-bold text-white">{{ $book->judul }}</h1>
+                    <p>Penulis: {{ $book->penulis ?? '-' }}</p>
+                    <p>Penerbit: {{ $book->penerbit ?? '-' }}</p>
+                    <p>Tahun Terbit: {{ $book->tahun_terbit ?? '-' }}</p>
+                    <p>Kategori: {{ $book->category->nama ?? '-' }}</p>
+                    <p>Bahasa: {{ $book->bahasa ?? '-' }}</p>
+                    <p>Jumlah Halaman: {{ $book->jumlah_halaman ?? '-' }}</p>
 
-                    <p class="text-gray-600">
+                    <p class="mt-2">
                         Status:
                         <span class="inline-block px-3 py-1 rounded-full
                         {{ $book->status === 'aktif' ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-600' }}">
@@ -39,20 +41,18 @@
                         </span>
                     </p>
 
-                    <p class="text-gray-600 mt-4">{{ $book->deskripsi ?? 'Deskripsi buku belum tersedia.' }}</p>
+                    <p class="mt-4">{{ $book->deskripsi ?? 'Deskripsi buku belum tersedia.' }}</p>
                 </div>
 
                 <!-- Tombol Kembali -->
                 <div class="mt-6">
-                    <a href="{{ route('katalog.index') }}"
-                        class="inline-block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                    <x-primary-button as="a" href="{{ route('katalog.index') }}">
                         Kembali ke Katalog
-                    </a>
+                    </x-primary-button>
                 </div>
             </div>
 
-            {{-- JSON-LD Metadata --}}
-            {{-- Bisa aktifkan nanti untuk web semantik --}}
+            {{-- JSON-LD Metadata (aktifkan kalau mau web semantik) --}}
             {{--
             <script type="application/ld+json">
                 {!! json_encode([
@@ -69,7 +69,6 @@
                 ]) !!}
             </script>
             --}}
-
         </div>
     </div>
 </x-app-layout>

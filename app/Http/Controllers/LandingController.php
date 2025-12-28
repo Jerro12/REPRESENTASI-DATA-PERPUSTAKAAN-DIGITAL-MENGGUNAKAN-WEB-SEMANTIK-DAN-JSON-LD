@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Book;
@@ -9,7 +10,13 @@ class LandingController extends Controller
     public function index()
     {
         return view('landing', [
-            'books' => Book::latest()->take(6)->get(),
+            // 3 buku terbaru
+            'books' => Book::with('category')
+                ->latest()
+                ->take(3)
+                ->get(),
+
+            // Kategori terpopuler
             'categories' => Category::withCount('books')
                 ->orderByDesc('books_count')
                 ->take(8)

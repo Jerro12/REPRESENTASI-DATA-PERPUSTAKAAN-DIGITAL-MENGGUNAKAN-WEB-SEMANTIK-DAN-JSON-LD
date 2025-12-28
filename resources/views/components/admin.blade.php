@@ -1,4 +1,3 @@
-<!-- resources/views/layouts/admin.blade.php -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -6,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }} — Admin</title>
 
     <!-- Fonts -->
@@ -27,16 +25,16 @@
             {{-- Header --}}
             <header class="bg-white shadow-sm border-b border-gray-200">
                 <div class="flex justify-between items-center px-6 py-4">
-                    <h1 class="text-xl font-semibold text-gray-800">Admin Panel</h1>
+                    <h1 class="text-xl font-semibold text-[#1dc2fe]">Admin Panel</h1>
 
                     <div class="flex items-center space-x-4">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button
-                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-600 bg-white hover:text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition ease-in-out duration-150">
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-600 bg-white hover:text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1dc2fe] transition ease-in-out duration-150">
                                     <div class="flex items-center">
                                         <div
-                                            class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-sm font-medium mr-3">
+                                            class="w-8 h-8 bg-[#1dc2fe] rounded-full flex items-center justify-center text-white text-sm font-medium mr-3">
                                             {{ substr(Auth::user()->name, 0, 1) }}
                                         </div>
                                         <span>{{ Auth::user()->name }}</span>
@@ -54,10 +52,6 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                {{-- <x-dropdown-link :href="route('profile.edit')">
-                                    {{ __('Profile') }}
-                                </x-dropdown-link> --}}
-
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <x-dropdown-link :href="route('logout')"
@@ -72,9 +66,8 @@
             </header>
 
             {{-- Main content --}}
-            <main class="flex-1 overflow-auto bg-gray-50">
+            <main class="flex-1 overflow-auto bg-gray-50 w-full">
                 <div class="p-6">
-                    {{-- @yield('content') --}}
                     {{ $slot }}
                 </div>
             </main>

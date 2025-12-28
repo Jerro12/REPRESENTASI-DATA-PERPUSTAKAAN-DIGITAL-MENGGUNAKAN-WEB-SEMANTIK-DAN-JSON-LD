@@ -1,6 +1,6 @@
-<div class="mt-20 mb-16">
-    <div class="max-w-7xl mx-auto px-6 sm:px-12">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-xl shadow-lg p-10 text-center text-white">
+<div class="mt-20 mb-16 w-full -mx-4 sm:-mx-6 lg:-mx-8">
+    <div class="text-center w-full">
+        <div class="bg-gradient-to-r from-[#1dc2fe] to-[#094054] rounded-xl shadow-lg p-10 text-white">
 
             <!-- CTA Title -->
             <h2 class="text-2xl sm:text-3xl font-bold mb-4">
@@ -16,10 +16,9 @@
 
             <!-- CTA Button -->
             <div class="flex justify-center">
-                <a href="{{ route('katalog.index') }}" class="bg-white text-blue-700 font-semibold px-8 py-3 rounded-lg shadow
-                          hover:bg-gray-100 transition">
+                <x-primary-button :href="route('katalog.index')" class="px-8 py-3">
                     Lihat Katalog Buku
-                </a>
+                </x-primary-button>
             </div>
 
         </div>

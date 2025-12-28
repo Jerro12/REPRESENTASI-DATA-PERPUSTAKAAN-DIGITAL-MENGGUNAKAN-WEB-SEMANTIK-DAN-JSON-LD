@@ -13,29 +13,30 @@ use App\Http\Controllers\LandingController;
 Route::get('/', [LandingController::class, 'index'])->middleware('guest');
 
 
-// Semua halaman user harus login & verified
 Route::middleware(['auth', 'verified'])->group(function () {
 
     // Dashboard User
     Route::get('/dashboard', function () {
         return view('user.home.dashboard');
-    })->name('user.home.dashboard');
+    })->name('dashboard');
 
     // Katalog Buku
     Route::get('/katalog', [CatalogController::class, 'index'])
         ->name('katalog.index');
 
-    // Detail Buku (opsional)
+    // Detail Buku
     Route::get('/katalog/{book}', [CatalogController::class, 'show'])
         ->name('katalog.show');
-    // Halaman Koleksi (Buku Favorit)
+
+    // Koleksi Favorit
     Route::get('/koleksi', [KoleksiController::class, 'index'])
         ->name('koleksi');
 
-    // Toggle favorit / simpan buku (AJAX)
     Route::post('/koleksi/toggle/{book}', [KoleksiController::class, 'toggle'])
         ->name('koleksi.toggle');
 });
+
+
 
 
 
