@@ -1,33 +1,31 @@
-<nav x-data="{ open: false }" class="bg-[#081e26] border-b border-[#094054]">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-[#1dc2fe]" />
-                    </a>
-                </div>
+<nav x-data="{ open: false }" class="bg-[#081e26] border-b border-[#094054] sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <!-- Logo -->
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
+            <x-application-logo class="w-8 h-8 text-[#1dc2fe]" />
+            <span class="font-semibold text-lg text-white">Perpustakaan Digital</span>
+        </a>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('user.home.dashboard')">
-                        {{ __('Beranda') }}
-                    </x-nav-link>
+        <!-- Menu di tengah -->
+        <div class="hidden md:flex flex-1 justify-center items-center gap-8 text-sm text-[#cbd5e1]">
+            <a href="{{ route('dashboard') }}" 
+               class="hover:text-[#1dc2fe] transition {{ request()->routeIs('user.home.dashboard') ? 'text-[#1dc2fe] font-medium' : '' }}">
+                Beranda
+            </a>
+            <a href="{{ route('katalog.index') }}" 
+               class="hover:text-[#1dc2fe] transition {{ request()->routeIs('katalog.*') ? 'text-[#1dc2fe] font-medium' : '' }}">
+                Katalog
+            </a>
+            <a href="{{ route('koleksi') }}" 
+               class="hover:text-[#1dc2fe] transition {{ request()->routeIs('koleksi') ? 'text-[#1dc2fe] font-medium' : '' }}">
+                Koleksi
+            </a>
+        </div>
 
-                    <x-nav-link :href="route('katalog.index')" :active="request()->routeIs('katalog.*')">
-                        {{ __('Katalog') }}
-                    </x-nav-link>
-
-                    <x-nav-link :href="route('koleksi')" :active="request()->routeIs('koleksi')">
-                        {{ __('Koleksi') }}
-                    </x-nav-link>
-                </div>
-            </div>
-
+        <!-- Right: Profile Dropdown & Hamburger -->
+        <div class="flex items-center gap-3">
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            <div class="hidden sm:flex sm:items-center">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
@@ -81,8 +79,14 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('user.home.dashboard')">
+                {{ __('Beranda') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('katalog.index')" :active="request()->routeIs('katalog.*')">
+                {{ __('Katalog') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('koleksi')" :active="request()->routeIs('koleksi')">
+                {{ __('Koleksi') }}
             </x-responsive-nav-link>
         </div>
 
