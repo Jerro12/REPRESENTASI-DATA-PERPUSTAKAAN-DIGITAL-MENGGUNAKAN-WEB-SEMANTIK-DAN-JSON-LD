@@ -7,6 +7,7 @@ use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class BookController extends Controller
 {
@@ -38,26 +39,26 @@ class BookController extends Controller
             'subjek' => 'nullable|string|max:255',
             'status' => 'nullable|in:aktif,nonaktif',
             'jumlah_halaman' => 'nullable|integer',
-            'file_path' => 'nullable|string|max:255',
-            'cover' => 'nullable|string|max:255',
+            'file_path' => 'nullable|file|mimes:pdf|max:10240', // Max 10MB
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
         ]);
 
-        Book::create([
-            'kode_buku' => $request->kode_buku,
-            'judul' => $request->judul,
-            'penulis' => $request->penulis,
-            'penerbit' => $request->penerbit,
-            'tahun_terbit' => $request->tahun_terbit,
-            'isbn' => $request->isbn,
-            'bahasa' => $request->bahasa,
-            'category_id' => $request->category_id,
-            'deskripsi' => $request->deskripsi,
-            'subjek' => $request->subjek,
-            'status' => $request->status ?? 'aktif', // default aktif
-            'jumlah_halaman' => $request->jumlah_halaman,
-            'file_path' => $request->file_path,
-            'cover' => $request->cover,
-        ]);
+        $data = $request->except(['file_path', 'cover']);
+
+        // Upload Cover
+        if ($request->hasFile('cover')) {
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        // Upload PDF
+        if ($request->hasFile('file_path')) {
+            $data['file_path'] = $request->file('file_path')->store('books', 'public');
+        }
+
+        // Default status if not set
+        $data['status'] = $request->status ?? 'aktif';
+
+        Book::create($data);
 
         return redirect()
             ->route('admin.books.index')
@@ -82,26 +83,31 @@ class BookController extends Controller
             'subjek' => 'nullable|string|max:255',
             'status' => 'nullable|in:aktif,nonaktif',
             'jumlah_halaman' => 'nullable|integer',
-            'file_path' => 'nullable|string|max:255',
-            'cover' => 'nullable|string|max:255',
+            'file_path' => 'nullable|file|mimes:pdf|max:10240',
+            'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $book->update([
-            'kode_buku' => $request->kode_buku,
-            'judul' => $request->judul,
-            'penulis' => $request->penulis,
-            'penerbit' => $request->penerbit,
-            'tahun_terbit' => $request->tahun_terbit,
-            'isbn' => $request->isbn,
-            'bahasa' => $request->bahasa,
-            'category_id' => $request->category_id,
-            'deskripsi' => $request->deskripsi,
-            'subjek' => $request->subjek,
-            'status' => $request->status ?? 'aktif',
-            'jumlah_halaman' => $request->jumlah_halaman,
-            'file_path' => $request->file_path,
-            'cover' => $request->cover,
-        ]);
+        $data = $request->except(['file_path', 'cover']);
+
+        // Upload Cover Baru
+        if ($request->hasFile('cover')) {
+            // Hapus file lama jika ada
+            if ($book->cover && Storage::disk('public')->exists($book->cover)) {
+                Storage::disk('public')->delete($book->cover);
+            }
+            $data['cover'] = $request->file('cover')->store('covers', 'public');
+        }
+
+        // Upload PDF Baru
+        if ($request->hasFile('file_path')) {
+            // Hapus file lama jika ada
+            if ($book->file_path && Storage::disk('public')->exists($book->file_path)) {
+                Storage::disk('public')->delete($book->file_path);
+            }
+            $data['file_path'] = $request->file('file_path')->store('books', 'public');
+        }
+
+        $book->update($data);
 
         return redirect()
             ->route('admin.books.index')
@@ -113,6 +119,14 @@ class BookController extends Controller
      */
     public function destroy(Book $book)
     {
+        // Hapus file fisik
+        if ($book->cover && Storage::disk('public')->exists($book->cover)) {
+            Storage::disk('public')->delete($book->cover);
+        }
+        if ($book->file_path && Storage::disk('public')->exists($book->file_path)) {
+            Storage::disk('public')->delete($book->file_path);
+        }
+
         $book->delete();
 
         return redirect()

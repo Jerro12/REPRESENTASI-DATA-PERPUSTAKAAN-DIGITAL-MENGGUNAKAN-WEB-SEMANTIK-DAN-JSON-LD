@@ -1,4 +1,4 @@
-<form action="{{ route('admin.books.update', $book->id) }}" method="POST">
+<form action="{{ route('admin.books.update', $book->id) }}" method="POST" enctype="multipart/form-data">
     @csrf
     @method('PUT')
     <div class="p-6">
@@ -31,14 +31,14 @@
         {{-- Kategori --}}
         <div class="mb-4">
             <x-input-label for="category_id-{{ $book->id }}" value="Kategori" />
-            <select id="category_id-{{ $book->id }}" name="category_id" class="select select-bordered w-full mt-1"
+            <x-select-input id="category_id-{{ $book->id }}" name="category_id" class="mt-1 block w-full"
                 required>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ $book->category_id == $category->id ? 'selected' : '' }}>
                         {{ $category->nama }}
                     </option>
                 @endforeach
-            </select>
+            </x-select-input>
             <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
         </div>
 
@@ -92,17 +92,31 @@
 
         {{-- File Path --}}
         <div class="mb-4">
-            <x-input-label for="file_path-{{ $book->id }}" value="File / Buku Digital" />
-            <x-text-input id="file_path-{{ $book->id }}" name="file_path" type="text" class="mt-1 block w-full"
-                value="{{ old('file_path', $book->file_path) }}" />
+            <x-input-label for="file_path-{{ $book->id }}" value="File PDF Buku" />
+            
+            @if($book->file_path)
+                <div class="mb-2 text-sm text-gray-500">
+                    File Saat Ini: <a href="{{ asset('storage/' . $book->file_path) }}" target="_blank" class="text-blue-500 underline">Lihat PDF</a>
+                </div>
+            @endif
+
+            <input id="file_path-{{ $book->id }}" name="file_path" type="file" accept=".pdf" 
+                class="file-input file-input-bordered file-input-primary w-full mt-1" />
             <x-input-error :messages="$errors->get('file_path')" class="mt-2" />
         </div>
 
         {{-- Cover --}}
         <div class="mb-4">
-            <x-input-label for="cover-{{ $book->id }}" value="Cover" />
-            <x-text-input id="cover-{{ $book->id }}" name="cover" type="text" class="mt-1 block w-full"
-                value="{{ old('cover', $book->cover) }}" />
+            <x-input-label for="cover-{{ $book->id }}" value="Cover Gambar" />
+
+            @if($book->cover)
+                <div class="mb-2">
+                    <img src="{{ asset('storage/' . $book->cover) }}" alt="Cover Saat Ini" class="w-16 h-24 object-cover border rounded bg-gray-100">
+                </div>
+            @endif
+
+            <input id="cover-{{ $book->id }}" name="cover" type="file" accept="image/*" 
+                class="file-input file-input-bordered file-input-primary w-full mt-1" />
             <x-input-error :messages="$errors->get('cover')" class="mt-2" />
         </div>
 
@@ -114,11 +128,11 @@
             @else
                 <span class="px-3 py-1 rounded-full bg-red-100 text-red-800 font-semibold text-sm">Nonaktif</span>
             @endif
-            <select name="status" class="select select-bordered w-40 ml-2">
+            <x-select-input name="status" class="w-40 ml-2">
                 <option value="aktif" {{ old('status', $book->status) == 'aktif' ? 'selected' : '' }}>Aktif</option>
                 <option value="nonaktif" {{ old('status', $book->status) == 'nonaktif' ? 'selected' : '' }}>Nonaktif
                 </option>
-            </select>
+            </x-select-input>
         </div>
 
         {{-- Tombol aksi --}}

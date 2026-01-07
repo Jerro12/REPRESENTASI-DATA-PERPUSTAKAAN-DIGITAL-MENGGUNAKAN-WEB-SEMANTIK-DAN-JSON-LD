@@ -47,8 +47,22 @@
                             <td class="px-4 py-2">{{ $book->isbn ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $book->bahasa ?? '-' }}</td>
                             <td class="px-4 py-2">{{ $book->jumlah_halaman ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ $book->file_path ?? '-' }}</td>
-                            <td class="px-4 py-2">{{ $book->cover ?? '-' }}</td>
+                            <td class="px-4 py-2">
+                                @if($book->file_path)
+                                    <a href="{{ asset('storage/' . $book->file_path) }}" target="_blank"
+                                        class="text-blue-500 underline text-sm">Lihat PDF</a>
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
+                            <td class="px-4 py-2">
+                                @if($book->cover)
+                                    <img src="{{ asset('storage/' . $book->cover) }}" alt="Cover"
+                                        class="w-16 h-24 object-cover border rounded bg-gray-50">
+                                @else
+                                    <span class="text-gray-400">-</span>
+                                @endif
+                            </td>
                             <td class="px-4 py-2">
                                 @if($book->status === 'aktif')
                                     <span

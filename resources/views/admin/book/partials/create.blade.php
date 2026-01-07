@@ -1,4 +1,4 @@
-<form action="{{ route('admin.books.store') }}" method="POST">
+<form action="{{ route('admin.books.store') }}" method="POST" enctype="multipart/form-data">
     @csrf
     <div class="p-6">
         <h3 class="text-lg font-bold mb-4">Tambah Buku</h3>
@@ -27,11 +27,11 @@
         {{-- Kategori --}}
         <div class="mb-4">
             <x-input-label for="category_id" value="Kategori" />
-            <select id="category_id" name="category_id" class="select select-bordered w-full mt-1" required>
+            <x-select-input id="category_id" name="category_id" class="mt-1 block w-full" required>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->nama }}</option>
                 @endforeach
-            </select>
+            </x-select-input>
             <x-input-error :messages="$errors->get('category_id')" class="mt-2" />
         </div>
 
@@ -79,15 +79,15 @@
 
         {{-- File Path --}}
         <div class="mb-4">
-            <x-input-label for="file_path" value="File / Buku Digital" />
-            <x-text-input id="file_path" name="file_path" type="text" class="mt-1 block w-full" />
+            <x-input-label for="file_path" value="File PDF Buku" />
+            <input id="file_path" name="file_path" type="file" accept=".pdf" class="file-input file-input-bordered file-input-primary w-full mt-1" />
             <x-input-error :messages="$errors->get('file_path')" class="mt-2" />
         </div>
 
         {{-- Cover --}}
         <div class="mb-4">
-            <x-input-label for="cover" value="Cover" />
-            <x-text-input id="cover" name="cover" type="text" class="mt-1 block w-full" />
+            <x-input-label for="cover" value="Cover Gambar" />
+            <input id="cover" name="cover" type="file" accept="image/*" class="file-input file-input-bordered file-input-primary w-full mt-1" />
             <x-input-error :messages="$errors->get('cover')" class="mt-2" />
         </div>
 
