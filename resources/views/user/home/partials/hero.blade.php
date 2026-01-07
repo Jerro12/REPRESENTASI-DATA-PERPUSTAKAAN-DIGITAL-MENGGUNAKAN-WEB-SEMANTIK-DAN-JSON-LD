@@ -1,4 +1,4 @@
-<div class="w-full bg-[#094054] text-[#cbd5e1] py-16 px-6 sm:px-12 -mx-4 sm:-mx-6 lg:-mx-8 shadow-lg">
+<div class=" bg-[#094054] text-[#cbd5e1] py-16 px-6 sm:px-12 -mx-4 sm:-mx-6 lg:-mx-8 shadow-lg">
     <div class="text-center mx-auto max-w-7xl">
         <!-- Judul -->
         <h1 class="text-4xl sm:text-5xl font-bold mb-4 text-white">

@@ -9,18 +9,38 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // Cari user admin berdasarkan email
+        /**
+         * ======================
+         * SEEDER ADMIN
+         * ======================
+         */
         $admin = User::firstOrCreate(
-            ['email' => 'admin@example.com'], // kondisi unik
+            ['email' => 'admin@example.com'],
             [
                 'name' => 'Admin',
-                'password' => bcrypt('password123'), // ganti dengan password kamu
+                'password' => bcrypt('password123'), // ganti password
             ]
         );
 
-        // Assign role admin (aman, tidak duplikat)
         if (! $admin->hasRole('admin')) {
             $admin->assignRole('admin');
+        }
+
+        /**
+         * ======================
+         * SEEDER USER BIASA
+         * ======================
+         */
+        $user = User::firstOrCreate(
+            ['email' => 'user@example.com'],
+            [
+                'name' => 'User',
+                'password' => bcrypt('password123'), // ganti password
+            ]
+        );
+
+        if (! $user->hasRole('user')) {
+            $user->assignRole('user');
         }
     }
 }
