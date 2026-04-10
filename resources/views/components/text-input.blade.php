@@ -6,11 +6,11 @@
             rounded-md
             shadow-sm
 
-            bg-[#094054]
-            border border-[#0b556d]
+            bg-[#FFFFFF]
+            border border-[#F1F5F9]
 
-            text-white
-            placeholder-[#cbd5e1]
+            text-[#1A202C]
+            placeholder-[#718096]
 
             focus:border-[#1dc2fe]
             focus:ring-2

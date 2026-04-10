@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-[#1dc2fe] leading-tight">
+        <h2 class="font-semibold text-xl text-[#1A202C] leading-tight">
             {{ __('Katalog Buku') }}
         </h2>
     </x-slot>
@@ -19,7 +19,7 @@
                 @forelse ($books ?? [] as $book)
                     @include('user.catalog.partials.book-card', ['book' => $book])
                 @empty
-                    <div class="col-span-full text-center text-[#cbd5e1]">
+                    <div class="col-span-full text-center text-[#718096]">
                         Belum ada buku tersedia.
                     </div>
                 @endforelse

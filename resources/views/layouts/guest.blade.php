@@ -26,7 +26,7 @@
     </style>
 </head>
 
-<body class="font-sans antialiased bg-[#081e26] text-[#cbd5e1]">
+<body class="font-sans antialiased bg-[#FFFFFF] text-[#718096]">
     {{-- Halaman Auth --}}
     @if (request()->routeIs('login', 'register', 'password.*'))
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
@@ -36,13 +36,13 @@
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-[#094054] shadow-md overflow-hidden sm:rounded-lg text-white">
+            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-[#FFFFFF] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border border-[#F1F5F9] overflow-hidden sm:rounded-lg text-[#1A202C]">
                 {{ $slot }}
             </div>
         </div>
     @else
         {{-- Landing page / guest --}}
-        <div class="min-h-screen bg-[#081e26] text-[#cbd5e1]">
+        <div class="min-h-screen bg-[#FFFFFF] text-[#718096]">
             {{ $slot }}
         </div>
     @endif

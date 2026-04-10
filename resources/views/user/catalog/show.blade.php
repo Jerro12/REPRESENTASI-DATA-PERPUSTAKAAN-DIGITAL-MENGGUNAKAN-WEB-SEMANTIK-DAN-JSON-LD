@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-[#1dc2fe] leading-tight">
+        <h2 class="font-semibold text-xl text-[#1A202C] leading-tight">
             {{ $book->judul ?? 'Detail Buku' }}
         </h2>
     </x-slot>
@@ -32,15 +32,15 @@
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <!-- Card Detail Buku -->
-            <div class="bg-[#094054] shadow-sm rounded-lg p-6 text-[#cbd5e1]">
+            <div class="bg-[#FFFFFF] border border-[#F1F5F9] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] rounded-lg p-6 text-[#718096]">
 
                 <!-- Cover -->
                 <div class="mb-6 flex justify-center">
                     @if ($book->cover)
-                        <img src="{{ asset($book->cover) }}" alt="{{ $book->judul }}" class="h-64 object-contain rounded">
+                        <img src="{{ asset($book->cover) }}" alt="{{ $book->judul }}" class="h-64 object-contain rounded shadow-sm border border-[#F1F5F9]">
                     @else
                         <div
-                            class="h-64 w-full bg-[#081e26] rounded flex items-center justify-center text-[#cbd5e1] text-sm">
+                            class="h-64 w-full bg-[#F1F5F9] rounded flex items-center justify-center text-[#718096] text-sm">
                             Cover Buku
                         </div>
                     @endif
@@ -48,7 +48,7 @@
 
                 <!-- Info Buku -->
                 <div class="space-y-2">
-                    <h1 class="text-2xl font-bold text-white">{{ $book->judul }}</h1>
+                    <h1 class="text-2xl font-bold text-[#1A202C]">{{ $book->judul }}</h1>
                     <p>Penulis: {{ $book->penulis ?? '-' }}</p>
                     <p>Penerbit: {{ $book->penerbit ?? '-' }}</p>
                     <p>Tahun Terbit: {{ $book->tahun_terbit ?? '-' }}</p>

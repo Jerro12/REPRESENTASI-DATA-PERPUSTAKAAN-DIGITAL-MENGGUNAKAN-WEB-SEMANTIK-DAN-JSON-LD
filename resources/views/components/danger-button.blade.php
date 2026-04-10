@@ -18,7 +18,7 @@
             focus:ring-2
             focus:ring-red-500
             focus:ring-offset-2
-            focus:ring-offset-[#081e26]
+            focus:ring-offset-[#FFFFFF]
 
             transition ease-in-out duration-150
         '

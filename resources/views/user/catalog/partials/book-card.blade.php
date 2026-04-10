@@ -1,29 +1,29 @@
-<div class="bg-[#094054] rounded-lg shadow-sm p-5 hover:shadow-md transition">
-    <h3 class="text-lg font-semibold text-[#1dc2fe]">
+<div class="bg-[#FFFFFF] border border-[#F1F5F9] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] rounded-lg p-5 hover:shadow-md transition">
+    <h3 class="text-lg font-semibold text-[#1A202C]">
         {{ $book->judul ?? 'Judul Buku' }}
     </h3>
 
-    <p class="text-sm text-[#cbd5e1] mt-1">
+    <p class="text-sm text-[#718096] mt-1">
         Penulis: {{ $book->penulis ?? '-' }}
     </p>
 
-    <p class="text-sm text-[#cbd5e1]">
+    <p class="text-sm text-[#718096]">
         Tahun: {{ $book->tahun_terbit ?? '-' }}
     </p>
 
-    <p class="text-sm text-[#cbd5e1]">
+    <p class="text-sm text-[#718096]">
         Kategori: {{ $book->category->nama ?? '-' }}
     </p>
 
     {{-- Deskripsi hanya tampil kalau flag true --}}
     @if($showDescription ?? false)
-        <p class="text-sm text-[#cbd5e1] mt-2 line-clamp-3">
+        <p class="text-sm text-[#718096] mt-2 line-clamp-3">
             {{ $book->deskripsi ?? '-' }}
         </p>
     @endif
 
     <div class="mt-4 flex items-center justify-between">
-        <a href="{{ route('katalog.show', $book) }}" class="text-[#1dc2fe] hover:underline text-sm font-medium">
+        <a href="{{ route('katalog.show', $book) }}" class="text-[#1DC2FE] hover:underline text-sm font-medium">
             Lihat Detail
         </a>
 

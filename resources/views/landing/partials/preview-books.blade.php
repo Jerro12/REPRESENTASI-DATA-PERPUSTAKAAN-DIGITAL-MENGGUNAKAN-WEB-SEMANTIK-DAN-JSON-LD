@@ -8,15 +8,15 @@
         ->get();
 @endphp
 
-<section id="koleksi" class="py-16 bg-[#081e26]">
+<section id="koleksi" class="py-16 bg-[#FFFFFF]">
     <div class="max-w-7xl mx-auto px-6 sm:px-12">
 
         <!-- Judul Section -->
         <div class="mb-10 text-center">
-            <h2 class="text-2xl sm:text-3xl font-bold text-[#1dc2fe]">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#1A202C]">
                 Koleksi Buku Terbaru
             </h2>
-            <p class="text-[#cbd5e1] mt-2 max-w-2xl mx-auto">
+            <p class="text-[#718096] mt-2 max-w-2xl mx-auto">
                 Beberapa koleksi buku terbaru yang tersedia di perpustakaan digital
             </p>
         </div>
@@ -24,7 +24,7 @@
         <!-- Grid Buku -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($books as $book)
-                    <div class="bg-[#094054] rounded-lg shadow hover:shadow-lg transition p-5">
+                    <div class="bg-[#FFFFFF] border border-[#F1F5F9] rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] hover:shadow-lg transition p-5">
 
                         <!-- Cover -->
                         <div class="mb-4">
@@ -34,19 +34,19 @@
                         </div>
 
                         <!-- Info Buku -->
-                        <h3 class="text-lg font-semibold text-white mb-1 line-clamp-2">
+                        <h3 class="text-lg font-semibold text-[#1A202C] mb-1 line-clamp-2">
                             {{ $book->judul }}
                         </h3>
 
-                        <p class="text-sm text-[#cbd5e1]">
+                        <p class="text-sm text-[#718096]">
                             Penulis: {{ $book->penulis }}
                         </p>
 
-                        <p class="text-sm text-[#cbd5e1]">
+                        <p class="text-sm text-[#718096]">
                             Kategori: {{ $book->category->nama ?? '-' }}
                         </p>
 
-                        <p class="text-sm text-gray-400 mt-1">
+                        <p class="text-sm text-[#718096] mt-1">
                             Tahun Terbit: {{ $book->tahun_terbit }}
                         </p>
 
@@ -59,7 +59,7 @@
                         </span>
                     </div>
             @empty
-                <div class="col-span-full text-center text-gray-400">
+                <div class="col-span-full text-center text-[#718096]">
                     Belum ada koleksi buku.
                 </div>
             @endforelse
@@ -68,7 +68,7 @@
         <!-- CTA -->
         <div class="text-center mt-12">
             <a href="{{ route('katalog.index') }}"
-                class="inline-block px-6 py-3 bg-[#1dc2fe] text-[#081e26] font-bold rounded-lg hover:bg-[#0bb0e6] transition">
+                class="inline-block px-6 py-3 bg-[#1DC2FE] text-[#FFFFFF] font-bold rounded-lg shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] hover:bg-[#1ab0e6] transition">
                 Lihat Semua Buku
             </a>
         </div>

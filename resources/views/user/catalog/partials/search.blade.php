@@ -1,12 +1,12 @@
-<div class="bg-[#0e2938] p-6 rounded-lg shadow-sm">
+<div class="bg-[#FFFFFF] border border-[#F1F5F9] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] p-6 rounded-lg shadow-sm">
     <form method="GET">
         <div class="flex flex-col sm:flex-row gap-4">
 
-            <input type="text" name="q" placeholder="Cari judul buku, penulis, atau kategori..." class="w-full rounded-md shadow-sm
-                       bg-[#094054]
-                       border border-[#0b556d]
-                       text-white placeholder-[#cbd5e1]
-                       focus:border-[#1dc2fe] focus:ring-2 focus:ring-[#1dc2fe]
+            <input type="text" name="q" value="{{ request('q') }}" placeholder="Cari judul buku, penulis, atau kategori..." class="w-full rounded-md shadow-sm
+                       bg-[#FFFFFF]
+                       border border-[#F1F5F9]
+                       text-[#1A202C] placeholder-[#718096]
+                       focus:border-[#1DC2FE] focus:ring-2 focus:ring-[#1DC2FE]
                        transition duration-150 ease-in-out">
 
             <x-primary-button class="w-full sm:w-auto">

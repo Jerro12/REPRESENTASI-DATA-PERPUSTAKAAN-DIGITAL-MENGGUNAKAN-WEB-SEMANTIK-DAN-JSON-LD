@@ -12,10 +12,10 @@
     <div class="text-center w-full px-6 sm:px-12">
         <!-- Section Title -->
         <div class="mb-8">
-            <h2 class="text-2xl sm:text-3xl font-bold text-white">
+            <h2 class="text-2xl sm:text-3xl font-bold text-[#1A202C]">
                 Buku Terbaru
             </h2>
-            <p class="text-[#cbd5e1] mt-2">
+            <p class="text-[#718096] mt-2">
                 Koleksi buku terbaru yang tersedia dalam perpustakaan digital
             </p>
         </div>
@@ -23,16 +23,16 @@
         <!-- Book Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             @forelse ($books as $book)
-                <div class="bg-[#094054] rounded-lg shadow hover:shadow-md transition p-5 text-white">
+                <div class="bg-[#FFFFFF] border border-[#F1F5F9] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] rounded-lg shadow hover:shadow-md transition p-5 text-[#718096]">
                     <!-- Cover -->
                     <div class="mb-4">
-                        <div class="h-40 bg-[#081e26] rounded flex items-center justify-center text-[#cbd5e1] text-sm">
+                        <div class="h-40 bg-[#F1F5F9] rounded flex items-center justify-center text-[#718096] text-sm">
                             Cover Buku
                         </div>
                     </div>
 
                     <!-- Book Info -->
-                    <h3 class="text-lg font-semibold mb-1">
+                    <h3 class="text-lg font-semibold mb-1 text-[#1A202C]">
                         {{ $book->judul }}
                     </h3>
 
@@ -44,7 +44,7 @@
                         Kategori: {{ $book->category->nama ?? '-' }}
                     </p>
 
-                    <p class="text-sm mt-1 text-[#cbd5e1]">
+                    <p class="text-sm mt-1">
                         Tahun Terbit: {{ $book->tahun_terbit }}
                     </p>
 
@@ -55,7 +55,7 @@
                     </span>
                 </div>
             @empty
-                <div class="col-span-full text-center text-[#cbd5e1]">
+                <div class="col-span-full text-center text-[#718096]">
                     Belum ada data buku.
                 </div>
             @endforelse

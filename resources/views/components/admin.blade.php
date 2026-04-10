@@ -15,7 +15,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-gray-50">
+<body class="font-sans antialiased bg-[#FFFFFF]">
     <div class="flex h-screen overflow-hidden">
         {{-- Sidebar --}}
         <x-sidebar />
@@ -23,18 +23,18 @@
         {{-- Main content area --}}
         <div class="flex-1 flex flex-col overflow-hidden ml-64">
             {{-- Header --}}
-            <header class="bg-white shadow-sm border-b border-gray-200">
+            <header class="bg-[#FFFFFF] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border-b border-[#F1F5F9]">
                 <div class="flex justify-between items-center px-6 py-4">
-                    <h1 class="text-xl font-semibold text-[#1dc2fe]">Admin Panel</h1>
+                    <h1 class="text-xl font-semibold text-[#1DC2FE]">Admin Panel</h1>
 
                     <div class="flex items-center space-x-4">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button
-                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-600 bg-white hover:text-gray-800 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1dc2fe] transition ease-in-out duration-150">
+                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-[#718096] bg-[#FFFFFF] hover:text-[#1A202C] hover:bg-[#F1F5F9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1DC2FE] transition ease-in-out duration-150">
                                     <div class="flex items-center">
                                         <div
-                                            class="w-8 h-8 bg-[#1dc2fe] rounded-full flex items-center justify-center text-white text-sm font-medium mr-3">
+                                            class="w-8 h-8 bg-[#1DC2FE] rounded-full flex items-center justify-center text-white text-sm font-medium mr-3">
                                             {{ substr(Auth::user()->name, 0, 1) }}
                                         </div>
                                         <span>{{ Auth::user()->name }}</span>
@@ -66,7 +66,7 @@
             </header>
 
             {{-- Main content --}}
-            <main class="flex-1 overflow-auto bg-gray-50 w-full">
+            <main class="flex-1 overflow-auto bg-[#FFFFFF] w-full">
                 <div class="p-6">
                     {{ $slot }}
                 </div>

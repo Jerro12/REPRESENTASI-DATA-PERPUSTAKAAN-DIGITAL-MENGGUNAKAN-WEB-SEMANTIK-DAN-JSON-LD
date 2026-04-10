@@ -1,23 +1,23 @@
-<nav x-data="{ open: false }" class="bg-[#081e26] border-b border-[#094054] sticky top-0 z-50">
+<nav x-data="{ open: false }" class="bg-[#FFFFFF] border-b border-[#F1F5F9] sticky top-0 z-50 shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)]">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <!-- Logo -->
         <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-            <x-application-logo class="w-8 h-8 text-[#1dc2fe]" />
-            <span class="font-semibold text-lg text-white">Perpustakaan Digital</span>
+            <x-application-logo class="w-8 h-8 text-[#1DC2FE]" />
+            <span class="font-semibold text-lg text-[#1A202C]">Perpustakaan Digital</span>
         </a>
 
         <!-- Menu di tengah -->
-        <div class="hidden md:flex flex-1 justify-center items-center gap-8 text-sm text-[#cbd5e1]">
-            <a href="{{ route('dashboard') }}" 
-               class="hover:text-[#1dc2fe] transition {{ request()->routeIs('user.home.dashboard') ? 'text-[#1dc2fe] font-medium' : '' }}">
+        <div class="hidden md:flex flex-1 justify-center items-center gap-8 text-sm text-[#718096]">
+            <a href="{{ route('dashboard') }}"
+                class="hover:text-[#1DC2FE] transition {{ request()->routeIs('user.home.dashboard') ? 'text-[#1DC2FE] font-medium' : '' }}">
                 Beranda
             </a>
-            <a href="{{ route('katalog.index') }}" 
-               class="hover:text-[#1dc2fe] transition {{ request()->routeIs('katalog.*') ? 'text-[#1dc2fe] font-medium' : '' }}">
+            <a href="{{ route('katalog.index') }}"
+                class="hover:text-[#1DC2FE] transition {{ request()->routeIs('katalog.*') ? 'text-[#1DC2FE] font-medium' : '' }}">
                 Katalog
             </a>
-            <a href="{{ route('koleksi') }}" 
-               class="hover:text-[#1dc2fe] transition {{ request()->routeIs('koleksi') ? 'text-[#1dc2fe] font-medium' : '' }}">
+            <a href="{{ route('koleksi') }}"
+                class="hover:text-[#1DC2FE] transition {{ request()->routeIs('koleksi') ? 'text-[#1DC2FE] font-medium' : '' }}">
                 Koleksi
             </a>
         </div>
@@ -29,7 +29,7 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button
-                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-[#cbd5e1] bg-[#094054] hover:text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1dc2fe] transition ease-in-out duration-150">
+                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-[#718096] bg-[#FFFFFF] hover:text-[#1A202C] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1DC2FE] transition ease-in-out duration-150">
                             <div>{{ Auth::user()->name }}</div>
 
                             <div class="ms-1">
@@ -63,7 +63,7 @@
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
-                    class="inline-flex items-center justify-center p-2 rounded-md text-[#cbd5e1] hover:text-white hover:bg-[#094054] focus:outline-none focus:bg-[#094054] focus:text-white transition duration-150 ease-in-out">
+                    class="inline-flex items-center justify-center p-2 rounded-md text-[#718096] hover:text-[#1A202C] hover:bg-[#F1F5F9] focus:outline-none focus:bg-[#F1F5F9] focus:text-[#1A202C] transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -91,10 +91,10 @@
         </div>
 
         <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-[#094054]">
+        <div class="pt-4 pb-1 border-t border-[#F1F5F9]">
             <div class="px-4">
-                <div class="font-medium text-base text-[#cbd5e1]">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-[#94a3b8]">{{ Auth::user()->email }}</div>
+                <div class="font-medium text-base text-[#1A202C]">{{ Auth::user()->name }}</div>
+                <div class="font-medium text-sm text-[#718096]">{{ Auth::user()->email }}</div>
             </div>
 
             <div class="mt-3 space-y-1">
