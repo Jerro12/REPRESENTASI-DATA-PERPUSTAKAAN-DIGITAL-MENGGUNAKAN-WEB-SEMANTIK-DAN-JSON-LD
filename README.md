@@ -11,13 +11,13 @@
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   [Simple, fast routing engine](https://laravel.com/docs/routing).
+-   [Powerful dependency injection container](https://laravel.com/docs/container).
+-   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+-   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+-   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+-   [Robust background job processing](https://laravel.com/docs/queues).
+-   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
@@ -35,14 +35,14 @@ We would like to extend our thanks to the following sponsors for funding Laravel
 
 ### Premium Partners
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+-   **[Vehikl](https://vehikl.com)**
+-   **[Tighten Co.](https://tighten.co)**
+-   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+-   **[64 Robots](https://64robots.com)**
+-   **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+-   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+-   **[Redberry](https://redberry.international/laravel-development)**
+-   **[Active Logic](https://activelogic.com)**
 
 ## Contributing
 
@@ -59,3 +59,48 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+======================================================================
+BAGIAN 1: PERINTAH RUTIN GIT (UNTUK ANDA)
+======================================================================
+
+1. CARA UPDATE PERUBAHAN KE GITHUB:
+   git add .
+   git commit -m "pesan perubahan di sini"
+   git push origin main
+
+2. JIKA GAGAL PUSH KE REPO SENDIRI (REJECTED):
+   git push -u origin main --force
+
+3. CARA CEK STATUS FILE:
+   git status
+
+======================================================================
+BAGIAN 2: PANDUAN INSTALASI (UNTUK TEMAN / CLONE BARU)
+======================================================================
+
+Langkah-langkah menjalankan proyek Laravel ini dari nol:
+
+1. CLONE PROJECT:
+   git clone https://github.com/Jerro12/REPRESENTASI-DATA-PERPUSTAKAAN-DIGITAL-MENGGUNAKAN-WEB-SEMANTIK-DAN-JSON-LD.git
+   cd REPRESENTASI-DATA-PERPUSTAKAAN-DIGITAL-MENGGUNAKAN-WEB-SEMANTIK-DAN-JSON-LD
+
+2. INSTAL DEPENDENSI (PHP & JS):
+   composer install
+   npm install
+
+3. PENGATURAN FILE .ENV:
+   cp .env.example .env
+   (Buka file .env, lalu sesuaikan nama database, user, dan password)
+
+4. GENERATE KEY:
+   php artisan key:generate
+
+5. DATABASE (MIGRATE & SEED):
+   php artisan migrate --seed
+
+6. JALANKAN PROYEK:
+   Terminal 1: php artisan serve
+   Terminal 2: npm run dev
+
+======================================================================
