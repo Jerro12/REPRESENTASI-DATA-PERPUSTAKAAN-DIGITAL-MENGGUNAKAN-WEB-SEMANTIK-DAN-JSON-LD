@@ -1,106 +1,216 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📚 Representasi Data Perpustakaan Digital Menggunakan Web Semantik dan JSON-LD
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi web perpustakaan digital yang mengimplementasikan teknologi **Web Semantik** dan **JSON-LD** untuk merepresentasikan data koleksi buku secara terstruktur dan mudah dipahami mesin pencari.
 
-## About Laravel
+Dibangun dengan **Laravel 12**, **Tailwind CSS**, dan **Alpine.js**.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
--   [Simple, fast routing engine](https://laravel.com/docs/routing).
--   [Powerful dependency injection container](https://laravel.com/docs/container).
--   Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
--   Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
--   Database agnostic [schema migrations](https://laravel.com/docs/migrations).
--   [Robust background job processing](https://laravel.com/docs/queues).
--   [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 🛠️ Teknologi yang Digunakan
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+| Teknologi                 | Versi |
+| ------------------------- | ----- |
+| PHP                       | ^8.2  |
+| Laravel                   | ^12.0 |
+| Laravel Breeze            | ^2.3  |
+| Spatie Laravel Permission | ^6.23 |
+| Vite                      | ^7.0  |
+| Tailwind CSS              | ^3.1  |
+| Alpine.js                 | ^3.4  |
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ✅ Persyaratan Sistem
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+Pastikan perangkat kamu sudah terinstall:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+-   **PHP** >= 8.2
+-   **Composer** >= 2.x
+-   **Node.js** >= 18.x & **NPM** >= 9.x
+-   **MySQL** / **MariaDB** (atau database lain yang didukung Laravel)
+-   **Git**
 
-## Laravel Sponsors
+---
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## 🚀 Langkah Instalasi
 
-### Premium Partners
+### 1. Clone Repository
 
--   **[Vehikl](https://vehikl.com)**
--   **[Tighten Co.](https://tighten.co)**
--   **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
--   **[64 Robots](https://64robots.com)**
--   **[Curotec](https://www.curotec.com/services/technologies/laravel)**
--   **[DevSquad](https://devsquad.com/hire-laravel-developers)**
--   **[Redberry](https://redberry.international/laravel-development)**
--   **[Active Logic](https://activelogic.com)**
+```bash
+git clone https://github.com/Jerro12/REPRESENTASI-DATA-PERPUSTAKAAN-DIGITAL-MENGGUNAKAN-WEB-SEMANTIK-DAN-JSON-LD.git
+cd REPRESENTASI-DATA-PERPUSTAKAAN-DIGITAL-MENGGUNAKAN-WEB-SEMANTIK-DAN-JSON-LD
+```
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 2. Install Dependensi PHP
 
-## Code of Conduct
+```bash
+composer install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+### 3. Konfigurasi Environment
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Salin file `.env.example` menjadi `.env`:
 
-## License
+```bash
+cp .env.example .env
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Kemudian buka file `.env` dan sesuaikan konfigurasi database:
 
-======================================================================
-BAGIAN 1: PERINTAH RUTIN GIT (UNTUK ANDA)
-======================================================================
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=nama_database_kamu
+DB_USERNAME=root
+DB_PASSWORD=password_kamu
+```
 
-1. CARA UPDATE PERUBAHAN KE GITHUB:
-   git add .
-   git commit -m "pesan perubahan di sini"
-   git push origin main
+---
 
-2. JIKA GAGAL PUSH KE REPO SENDIRI (REJECTED):
-   git push -u origin main --force
+### 4. Generate Application Key
 
-3. CARA CEK STATUS FILE:
-   git status
+```bash
+php artisan key:generate
+```
 
-======================================================================
-BAGIAN 2: PANDUAN INSTALASI (UNTUK TEMAN / CLONE BARU)
-======================================================================
+---
 
-Langkah-langkah menjalankan proyek Laravel ini dari nol:
+### 5. Jalankan Migrasi Database
 
-1. CLONE PROJECT:
-   git clone https://github.com/Jerro12/REPRESENTASI-DATA-PERPUSTAKAAN-DIGITAL-MENGGUNAKAN-WEB-SEMANTIK-DAN-JSON-LD.git
-   cd REPRESENTASI-DATA-PERPUSTAKAAN-DIGITAL-MENGGUNAKAN-WEB-SEMANTIK-DAN-JSON-LD
+Pastikan database sudah dibuat terlebih dahulu, lalu jalankan:
 
-2. INSTAL DEPENDENSI (PHP & JS):
-   composer install
-   npm install
+```bash
+php artisan migrate
+```
 
-3. PENGATURAN FILE .ENV:
-   cp .env.example .env
-   (Buka file .env, lalu sesuaikan nama database, user, dan password)
+Jika ada seeder (data awal), jalankan:
 
-4. GENERATE KEY:
-   php artisan key:generate
+```bash
+php artisan db:seed
+```
 
-5. DATABASE (MIGRATE & SEED):
-   php artisan migrate --seed
+---
 
-6. JALANKAN PROYEK:
-   Terminal 1: php artisan serve
-   Terminal 2: npm run dev
+### 6. Install Dependensi Node.js
 
-======================================================================
+```bash
+npm install
+```
+
+---
+
+### 7. Build Asset Frontend
+
+Untuk **production**:
+
+```bash
+npm run build
+```
+
+---
+
+### 8. Jalankan Aplikasi
+
+#### Cara Cepat (semua service sekaligus):
+
+```bash
+composer run dev
+```
+
+Perintah ini akan menjalankan secara bersamaan:
+
+-   PHP development server
+-   Queue listener
+-   Laravel Pail (log viewer)
+-   Vite dev server
+
+#### Cara Manual (terpisah):
+
+Buka **dua terminal** berbeda:
+
+**Terminal 1 — Backend:**
+
+```bash
+php artisan serve
+```
+
+**Terminal 2 — Frontend:**
+
+```bash
+npm run dev
+```
+
+---
+
+### 9. Akses Aplikasi
+
+Buka browser dan akses:
+
+```
+http://localhost:8000
+```
+
+---
+
+## ⚡ Instalasi Cepat (One Command)
+
+Kamu juga bisa menjalankan semua langkah setup sekaligus:
+
+```bash
+composer run setup
+```
+
+Perintah ini akan otomatis menjalankan:
+
+-   `composer install`
+-   Menyalin `.env.example` → `.env`
+-   Generate application key
+-   Migrasi database
+-   `npm install`
+-   `npm run build`
+
+> ⚠️ **Catatan:** Pastikan konfigurasi database di `.env` sudah benar sebelum menjalankan perintah ini.
+
+---
+
+## 🧪 Menjalankan Test
+
+```bash
+composer run test
+```
+
+---
+
+## 📁 Struktur Direktori Utama
+
+```
+├── app/                  # Logic aplikasi (Models, Controllers, dll)
+├── database/
+│   ├── migrations/       # File migrasi database
+│   └── seeders/          # Data awal database
+├── public/               # Asset publik
+├── resources/
+│   ├── views/            # Template Blade
+│   └── js/               # File JavaScript
+├── routes/               # Definisi routing
+├── .env.example          # Template konfigurasi environment
+├── composer.json
+└── package.json
+```
+
+---
+
+## 👤 Role & Permission
+
+Aplikasi ini menggunakan **Spatie Laravel Permission** untuk manajemen hak akses pengguna. Role dan permission dapat dikonfigurasi melalui seeder atau panel admin.
+
+---
+
+## 📄 Lisensi
+
+Proyek ini menggunakan lisensi **MIT**.
