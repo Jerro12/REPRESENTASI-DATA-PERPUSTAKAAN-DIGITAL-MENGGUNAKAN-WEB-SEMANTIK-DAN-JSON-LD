@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Category;
+use App\Helpers\SchemaHelper;
 
 class LandingController extends Controller
 {
@@ -28,6 +29,8 @@ class LandingController extends Controller
             ->take(6)
             ->get();
 
-        return view('landing', compact('stats', 'books', 'categories'));
+        $schema = SchemaHelper::getLibrarySchema($books);
+
+        return view('landing', compact('stats', 'books', 'categories', 'schema'));
     }
 }

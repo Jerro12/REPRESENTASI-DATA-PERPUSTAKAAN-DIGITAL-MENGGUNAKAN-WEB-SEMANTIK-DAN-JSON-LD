@@ -24,6 +24,13 @@
             scroll-margin-top: 6rem;
         }
     </style>
+
+    {{-- JSON-LD Schema --}}
+    @if(isset($schema))
+    <script type="application/ld+json">
+        {!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) !!}
+    </script>
+    @endif
 </head>
 
 <body class="font-sans antialiased bg-background text-foreground selection:bg-primary/20">

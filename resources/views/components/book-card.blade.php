@@ -25,8 +25,6 @@
                 </div>
                 @if($book->stok > 0)
                     <span class="badge-success text-[10px] font-black tracking-widest uppercase">Tersedia</span>
-                @else
-                    <span class="badge-danger text-[10px] font-black tracking-widest uppercase">Habis</span>
                 @endif
             </div>
         </div>

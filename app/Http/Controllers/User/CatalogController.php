@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Category;
+use App\Helpers\SchemaHelper;
 
 class CatalogController extends Controller
 {
@@ -162,7 +163,9 @@ class CatalogController extends Controller
         $years = Book::selectRaw('DISTINCT tahun_terbit')->orderBy('tahun_terbit', 'desc')->pluck('tahun_terbit');
         $authors = Book::selectRaw('DISTINCT penulis')->orderBy('penulis', 'asc')->pluck('penulis');
 
-        return view('user.catalog.index', compact('books', 'categories', 'years', 'authors'));
+        $schema = SchemaHelper::getLibrarySchema($books->getCollection());
+
+        return view('user.catalog.index', compact('books', 'categories', 'years', 'authors', 'schema'));
     }
 
     /**
@@ -179,6 +182,8 @@ class CatalogController extends Controller
             ->take(3)
             ->get();
 
-        return view('user.catalog.show', compact('book', 'relatedBooks'));
+        $schema = SchemaHelper::getBookSchema($book);
+
+        return view('user.catalog.show', compact('book', 'relatedBooks', 'schema'));
     }
 }   

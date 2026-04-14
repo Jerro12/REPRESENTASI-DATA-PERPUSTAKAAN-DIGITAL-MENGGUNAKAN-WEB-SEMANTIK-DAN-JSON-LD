@@ -49,4 +49,47 @@ class Book extends Model
     {
         return $this->belongsToMany(User::class, 'book_user')->withTimestamps();
     }
+
+    /**
+     * Generate JSON-LD for the book/article
+     */
+    public function toJsonLd()
+    {
+        $type = $this->category->collection_type ?? 'Book';
+        
+        $data = [
+            '@type' => $type,
+            'name' => $this->judul,
+            'author' => [
+                '@type' => 'Person',
+                'name' => $this->penulis,
+            ],
+            'publisher' => [
+                '@type' => 'Organization',
+                'name' => $this->penerbit ?: 'SMA 4 Pinrang',
+            ],
+            'datePublished' => $this->tahun_terbit,
+            'description' => $this->deskripsi,
+            'inLanguage' => $this->bahasa,
+        ];
+
+        if ($type === 'Book') {
+            $data['isbn'] = $this->isbn;
+            $data['numberOfPages'] = $this->jumlah_halaman;
+        }
+
+        if ($this->subjek) {
+            $data['about'] = $this->subjek;
+        }
+
+        if ($this->cover) {
+            $data['image'] = asset('storage/' . $this->cover);
+        }
+
+        if ($this->file_path) {
+            $data['url'] = asset('storage/' . $this->file_path);
+        }
+
+        return $data;
+    }
 }
