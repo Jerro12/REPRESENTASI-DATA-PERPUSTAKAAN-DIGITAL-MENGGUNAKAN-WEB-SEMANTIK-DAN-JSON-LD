@@ -10,15 +10,16 @@ use App\Http\Controllers\User\KoleksiController;
 use App\Http\Controllers\LandingController;
 
 
-Route::get('/', [LandingController::class, 'index'])->middleware('guest');
+Route::get('/', [LandingController::class, 'index']);
 
+// Daftar Kategori
+Route::get('/kategori-buku', [App\Http\Controllers\User\UserCategoryController::class, 'index'])
+    ->name('kategori.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard User
-    Route::get('/dashboard', function () {
-        return view('user.home.dashboard');
-    })->name('dashboard');
+    // Dashboard User menggunakan halaman landing premium
+    Route::get('/dashboard', [App\Http\Controllers\LandingController::class, 'index'])->name('dashboard');
 
     // Katalog Buku
     Route::get('/katalog', [CatalogController::class, 'index'])
@@ -31,6 +32,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Koleksi Favorit
     Route::get('/koleksi', [KoleksiController::class, 'index'])
         ->name('koleksi');
+
+    // Daftar Kategori
+    Route::get('/kategori-buku', [App\Http\Controllers\User\UserCategoryController::class, 'index'])
+        ->name('kategori.index');
 
     Route::post('/koleksi/toggle/{book}', [KoleksiController::class, 'toggle'])
         ->name('koleksi.toggle');

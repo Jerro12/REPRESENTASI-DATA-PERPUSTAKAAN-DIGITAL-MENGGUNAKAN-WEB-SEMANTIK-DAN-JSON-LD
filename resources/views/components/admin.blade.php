@@ -15,48 +15,64 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-[#FFFFFF]">
+<body class="font-sans antialiased bg-background text-foreground transition-colors duration-300" 
+      x-data="{ 
+        sidebarOpen: window.innerWidth > 1024,
+        mobileMenuOpen: false,
+        toggleSidebar() { this.sidebarOpen = !this.sidebarOpen }
+      }"
+      @resize.window="if (window.innerWidth > 1024) mobileMenuOpen = false">
+    
     <div class="flex h-screen overflow-hidden">
         {{-- Sidebar --}}
         <x-sidebar />
 
         {{-- Main content area --}}
-        <div class="flex-1 flex flex-col overflow-hidden ml-64">
+        <div class="flex-1 flex flex-col overflow-hidden transition-all duration-300"
+             :class="sidebarOpen ? 'lg:ml-64' : 'lg:ml-20'">
+            
             {{-- Header --}}
-            <header class="bg-[#FFFFFF] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)] border-b border-[#F1F5F9]">
+            <header class="bg-card shadow-sm border-b border-border sticky top-0 z-40">
                 <div class="flex justify-between items-center px-6 py-4">
-                    <h1 class="text-xl font-semibold text-[#1DC2FE]">Admin Panel</h1>
+                    <div class="flex items-center gap-4">
+                        <button @click="toggleSidebar()" class="p-2 rounded-lg hover:bg-secondary text-muted-foreground transition-colors">
+                            <svg class="w-5 h-5 transition-transform duration-300" :class="!sidebarOpen ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                <path d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+                            </svg>
+                        </button>
+                        <h1 class="text-lg font-bold text-foreground">Admin Panel</h1>
+                    </div>
 
                     <div class="flex items-center space-x-4">
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
-                                <button
-                                    class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-[#718096] bg-[#FFFFFF] hover:text-[#1A202C] hover:bg-[#F1F5F9] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#1DC2FE] transition ease-in-out duration-150">
-                                    <div class="flex items-center">
-                                        <div
-                                            class="w-8 h-8 bg-[#1DC2FE] rounded-full flex items-center justify-center text-white text-sm font-medium mr-3">
-                                            {{ substr(Auth::user()->name, 0, 1) }}
-                                        </div>
-                                        <span>{{ Auth::user()->name }}</span>
+                                <button class="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-secondary transition-all">
+                                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-primary-foreground font-bold shadow-lg shadow-primary/20">
+                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                     </div>
-
-                                    <div class="ml-2">
-                                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
+                                    <span class="text-sm font-semibold text-foreground hidden sm:block">{{ Auth::user()->name }}</span>
+                                    <svg class="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path d="M19 9l-7 7-7-7" stroke-width="2" />
+                                    </svg>
                                 </button>
                             </x-slot>
 
                             <x-slot name="content">
+                                <div class="px-4 py-2 border-b border-border">
+                                    <p class="text-xs font-bold text-muted-foreground uppercase tracking-widest">Akun Saya</p>
+                                    <p class="text-sm font-medium text-foreground truncate">{{ Auth::user()->email }}</p>
+                                </div>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault(); this.closest('form').submit();">
-                                        {{ __('Log Out') }}
+                                        onclick="event.preventDefault(); this.closest('form').submit();"
+                                        class="text-destructive hover:bg-destructive/10 transition-colors">
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" stroke-width="2"/>
+                                            </svg>
+                                            {{ __('Log Out') }}
+                                        </div>
                                     </x-dropdown-link>
                                 </form>
                             </x-slot>
@@ -66,8 +82,8 @@
             </header>
 
             {{-- Main content --}}
-            <main class="flex-1 overflow-auto bg-[#FFFFFF] w-full">
-                <div class="p-6">
+            <main class="flex-1 overflow-auto bg-background w-full">
+                <div class="p-8">
                     {{ $slot }}
                 </div>
             </main>

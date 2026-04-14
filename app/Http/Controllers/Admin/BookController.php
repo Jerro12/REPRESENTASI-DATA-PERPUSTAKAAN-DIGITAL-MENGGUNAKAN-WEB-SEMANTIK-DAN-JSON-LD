@@ -14,10 +14,20 @@ class BookController extends Controller
     /**
      * Tampilkan semua buku
      */
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::with('category')->latest()->get(); // ambil relasi kategori
-        $categories = Category::where('is_active', 1)->get(); // untuk dropdown create/edit
+        $search = $request->input('search');
+
+        $books = Book::with('category')
+            ->when($search, function ($query, $search) {
+                return $query->where('judul', 'like', "%{$search}%")
+                    ->orWhere('penulis', 'like', "%{$search}%")
+                    ->orWhere('kode_buku', 'like', "%{$search}%");
+            })
+            ->latest()
+            ->get();
+
+        $categories = Category::where('is_active', 1)->get();
         return view('admin.book.index', compact('books', 'categories'));
     }
 

@@ -11,8 +11,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        // Ambil semua kategori terbaru
-        $categories = Category::latest()->get();
+        // Ambil semua kategori terbaru dengan jumlah buku
+        $categories = Category::withCount('books')->latest()->get();
 
         return view('admin.category.index', compact('categories'));
     }

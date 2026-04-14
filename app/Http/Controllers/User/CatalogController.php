@@ -18,6 +18,7 @@ class CatalogController extends Controller
         $q = $request->input('q');
         $kategori = $request->input('kategori');
         $tahun = $request->input('tahun');
+        $penulis = $request->input('penulis');
 
         // 2. Inisialisasi Variable Smart Search
         $smartYear = null;
@@ -137,6 +138,9 @@ class CatalogController extends Controller
         if ($finalYear) {
             $booksQuery->where('tahun_terbit', $finalYear);
         }
+        if ($penulis) {
+            $booksQuery->where('penulis', $penulis);
+        }
 
         // -- Sorting --
         if ($sortField === 'favored_by_users_count') {
@@ -156,8 +160,9 @@ class CatalogController extends Controller
         // 5. Data untuk Dropdown UI
         $categories = Category::where('is_active', true)->get();
         $years = Book::selectRaw('DISTINCT tahun_terbit')->orderBy('tahun_terbit', 'desc')->pluck('tahun_terbit');
+        $authors = Book::selectRaw('DISTINCT penulis')->orderBy('penulis', 'asc')->pluck('penulis');
 
-        return view('user.catalog.index', compact('books', 'categories', 'years'));
+        return view('user.catalog.index', compact('books', 'categories', 'years', 'authors'));
     }
 
     /**
@@ -166,6 +171,14 @@ class CatalogController extends Controller
     public function show(Book $book)
     {
         $book->load('category');
-        return view('user.catalog.show', compact('book'));
+
+        $relatedBooks = Book::with('category')
+            ->where('category_id', $book->category_id)
+            ->where('id', '!=', $book->id)
+            ->where('status', 'aktif')
+            ->take(3)
+            ->get();
+
+        return view('user.catalog.show', compact('book', 'relatedBooks'));
     }
 }   
