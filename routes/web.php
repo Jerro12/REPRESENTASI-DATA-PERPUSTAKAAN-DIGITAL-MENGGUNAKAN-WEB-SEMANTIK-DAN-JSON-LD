@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\BookController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\User\CatalogController;
+use App\Http\Controllers\User\SearchEngineController;
 use App\Http\Controllers\User\KoleksiController;
 use App\Http\Controllers\LandingController;
 
@@ -21,8 +22,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard User menggunakan halaman landing premium
     Route::get('/dashboard', [App\Http\Controllers\LandingController::class, 'index'])->name('dashboard');
 
-    // Katalog Buku
-    Route::get('/katalog', [CatalogController::class, 'index'])
+    // Katalog Buku (Menggunakan Search Engine Controller untuk NLP Search)
+    Route::get('/katalog', [SearchEngineController::class, 'index'])
         ->name('katalog.index');
 
     // Detail Buku
