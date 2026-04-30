@@ -16,15 +16,15 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-[#FFFFFF] text-[#718096]">
+<body class="font-sans antialiased bg-background text-foreground">
     <div class="min-h-screen flex flex-col">
         {{-- Navigation --}}
         @include('layouts.navigation')
 
         {{-- Page Heading --}}
         @isset($header)
-            <header class="bg-[#FFFFFF] border-b border-[#F1F5F9] shadow-[0_4px_6px_-1px_rgba(0,0,0,0.05)]">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-[#1A202C]">
+            <header class="bg-card border-b border-border shadow-sm">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 text-foreground font-bold">
                     {{ $header }}
                 </div>
             </header>

@@ -23,14 +23,24 @@ class SearchEngineController extends Controller
         $smartYear = null;
         $smartCategory = null;
         $smartAuthor = null;
+        $smartPublisher = null;
         $cleanQ = $q;
         
         $sortField = 'created_at';
         $sortDirection = 'desc';
 
         if ($q) {
+            // -- PRE-PROCESSING: Bersihkan Tanda Baca & Tangani Pertanyaan Terbalik --
+            // Hapus tanda baca seperti "?" agar tidak ikut tertangkap oleh regex
+            $cleanQ = preg_replace('/[^\w\s\-]/', ' ', $cleanQ);
+            $cleanQ = trim(preg_replace('/\s+/', ' ', $cleanQ));
+            
+            // Hapus frasa tanya yang menjebak (agar tidak masuk ke filter spesifik)
+            // Contoh: "siapa penulis laskar pelangi" -> user mencari judul, bukan mencari penulis bernama "laskar pelangi"
+            $cleanQ = preg_replace('/\b(siapa\s+penulis|siapa\s+pengarang|siapa\s+penerbit|apa\s+judul|buku\s+apa)\b/i', '', $cleanQ);
+
             // -- 1. Deteksi Tahun (misal: "terbit tahun 2020", "2023") --
-            if (preg_match('/\b(19|20)\d{2}\b/', $q, $matches)) {
+            if (preg_match('/\b(19|20)\d{2}\b/', $cleanQ, $matches)) {
                 $smartYear = $matches[0];
                 $cleanQ = str_replace($smartYear, '', $cleanQ);
             }
@@ -68,19 +78,21 @@ class SearchEngineController extends Controller
                 }
             }
 
+            $boundary = '\b(?:dari|untuk|di|yang|tahun|penerbit|karya|penulis|karangan|oleh|terbitan|cetakan|produksi|judul|kategori|tentang|seputar|membahas|isinya|aja|diterbitkan|dikarang|dibuat|dicetak)\b';
+
             // -- 4. Deteksi Penulis Spesifik (contoh: "penulis tere liye", "karya andrea hirata") --
-            if (preg_match('/\b(karya|penulis|karangan|oleh|buatan)\s+([a-zA-Z\s]+)/i', $cleanQ, $matches)) {
-                // Ambil string nama, buang kata-kata tidak perlu
-                $potentialAuthor = trim($matches[2]);
-                // Batasi hanya mengambil maksimal 3 kata pertama sebagai nama
-                $authorWords = explode(' ', $potentialAuthor);
-                $smartAuthor = implode(' ', array_slice($authorWords, 0, 3));
-                // Hilangkan dari query pencarian umum
-                $cleanQ = preg_replace('/\b(karya|penulis|karangan|oleh|buatan)\b/i', '', $cleanQ);
-                $cleanQ = str_ireplace($smartAuthor, '', $cleanQ);
+            if (preg_match('/\b(karya|penulis|karangan|oleh)\s+(?:(?:buku|novel|cerita|dari|yg|yang)\s+)?(.*?)(?=' . $boundary . '|$)/i', $cleanQ, $matches)) {
+                $smartAuthor = trim($matches[2]);
+                $cleanQ = preg_replace('/\b(karya|penulis|karangan|oleh)\s+(?:(?:buku|novel|cerita|dari|yg|yang)\s+)?' . preg_quote($smartAuthor, '/') . '/i', '', $cleanQ);
             }
 
-            // -- 5. Menghapus Stop Words (NLP Ekstensi Kata-kata Gaul/Sehari-hari) --
+            // -- 5. Deteksi Penerbit Spesifik (contoh: "penerbit itb", "cetakan gramedia") --
+            if (preg_match('/\b(penerbit|produksi|cetakan|terbitan)\s+(?:(?:buku|novel|cerita|dari|yg|yang)\s+)?(.*?)(?=' . $boundary . '|$)/i', $cleanQ, $matches)) {
+                $smartPublisher = trim($matches[2]);
+                $cleanQ = preg_replace('/\b(penerbit|produksi|cetakan|terbitan)\s+(?:(?:buku|novel|cerita|dari|yg|yang)\s+)?' . preg_quote($smartPublisher, '/') . '/i', '', $cleanQ);
+            }
+
+            // -- 6. Menghapus Stop Words (NLP Ekstensi Kata-kata Gaul/Sehari-hari) --
             $stopWords = [
                 // Kata umum entitas
                 'buku', 'novel', 'komik', 'majalah', 'jurnal', 'makalah', 'skripsi', 'artikel', 'karya', 'bacaan', 'literatur',
@@ -94,7 +106,11 @@ class SearchEngineController extends Controller
                 // Kata tanya / percakapan
                 'ada', 'tidak', 'berjudul', 'oleh', 'karangan', 'penerbit', 'terbitan', 'tahun', 'terbit', 'edisi', 'volume', 'jilid', 
                 'hal', 'halaman', 'bab', 'nomor', 'apakah', 'siapa', 'apa', 'saja', 'daftar', 'koleksi', 'info', 'bagaimana', 'mana', 
-                'dimana', 'kapan', 'punya', 'gak', 'dong', 'sih', 'ya', 'no', 'dong', 'deh'
+                'dimana', 'kapan', 'punya', 'gak', 'dong', 'sih', 'ya', 'no', 'dong', 'deh',
+                // Kata kerja pasif / tambahan pertanyaan / percakapan
+                'ditulis', 'dibuat', 'dikarang', 'diterbitkan', 'dicetak', 'kenapa', 'mengapa', 'gimana', 'gmn',
+                'min', 'halo', 'hai', 'isinya', 'membahas', 'aja', 'kak', 'bang', 'pak', 'bu', 'judulnya', 'penulisnya', 'penerbitnya',
+                'nggak', 'ngga', 'caranya', 'bahas', 'bahasnya'
             ];
             
             foreach ($stopWords as $word) {
@@ -116,13 +132,18 @@ class SearchEngineController extends Controller
 
         // Text Search
         if (!empty($cleanQ)) {
-            $booksQuery->where(function ($query) use ($cleanQ) {
-                $query->where('judul', 'like', "%$cleanQ%")
-                      ->orWhere('penulis', 'like', "%$cleanQ%")
-                      ->orWhere('deskripsi', 'like', "%$cleanQ%")
-                      ->orWhere('penerbit', 'like', "%$cleanQ%")
-                      ->orWhere('isbn', 'like', "%$cleanQ%")
-                      ->orWhere('subjek', 'like', "%$cleanQ%");
+            $words = array_filter(explode(' ', $cleanQ));
+            $booksQuery->where(function ($query) use ($words) {
+                foreach ($words as $word) {
+                    $query->where(function ($q) use ($word) {
+                        $q->where('judul', 'like', "%$word%")
+                          ->orWhere('penulis', 'like', "%$word%")
+                          ->orWhere('deskripsi', 'like', "%$word%")
+                          ->orWhere('penerbit', 'like', "%$word%")
+                          ->orWhere('isbn', 'like', "%$word%")
+                          ->orWhere('subjek', 'like', "%$word%");
+                    });
+                }
             });
         }
 
@@ -130,13 +151,22 @@ class SearchEngineController extends Controller
         if ($finalCategory) {
             $booksQuery->where('category_id', $finalCategory);
         }
+        if ($smartPublisher) {
+            $pubWords = array_filter(explode(' ', $smartPublisher));
+            foreach ($pubWords as $pw) {
+                $booksQuery->where('penerbit', 'like', '%' . $pw . '%');
+            }
+        }
         if ($finalYear) {
             $booksQuery->where('tahun_terbit', $finalYear);
         }
         if ($finalAuthor) {
-            // Jika hasil dari NLP smartAuthor (misal: "tere liye"), kita gunakan LIKE agar lebih fleksibel dibanding strict equals.
+            // Jika hasil dari NLP smartAuthor, kita gunakan per kata agar lebih fleksibel (misal: Prof. Arya)
             if ($smartAuthor && empty($penulis)) {
-                $booksQuery->where('penulis', 'like', '%' . $finalAuthor . '%');
+                $authWords = array_filter(explode(' ', $finalAuthor));
+                foreach ($authWords as $aw) {
+                    $booksQuery->where('penulis', 'like', '%' . $aw . '%');
+                }
             } else {
                 $booksQuery->where('penulis', $finalAuthor); // Dari sidebar biasanya exact match
             }

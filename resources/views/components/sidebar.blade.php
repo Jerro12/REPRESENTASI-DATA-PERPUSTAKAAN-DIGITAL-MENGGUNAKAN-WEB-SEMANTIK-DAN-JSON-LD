@@ -1,4 +1,4 @@
-<aside class="fixed left-0 top-0 h-screen sidebar-gradient flex flex-col z-50 transition-all duration-300 border-r border-sidebar-border shadow-xl overflow-hidden group/sidebar"
+<aside class="fixed left-0 top-0 h-screen bg-sidebar-background flex flex-col z-50 transition-all duration-300 border-r border-sidebar-border shadow-xl overflow-hidden group/sidebar"
        :class="sidebarOpen ? 'w-64' : 'w-20'">
     {{-- Brand --}}
     <div class="px-5 py-6 border-b border-sidebar-border shrink-0">
@@ -78,7 +78,7 @@
 
     {{-- User Profile Card --}}
     <div class="p-4 border-t border-sidebar-border shrink-0">
-        <div class="bg-black/20 rounded-2xl p-3 flex items-center transition-all duration-300 overflow-hidden"
+        <div class="bg-sidebar-accent/50 rounded-2xl p-3 flex items-center transition-all duration-300 overflow-hidden"
              :class="sidebarOpen ? 'gap-3' : 'justify-center p-2'">
             <div class="w-8 h-8 rounded-lg bg-sidebar-primary flex items-center justify-center text-xs font-bold text-sidebar-primary-foreground border border-white/10 shrink-0 shadow-md">
                 {{ strtoupper(substr(Auth::user()->name ?? 'A', 0, 1)) }}

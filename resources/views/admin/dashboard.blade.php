@@ -19,7 +19,7 @@
             @foreach ($statItems as $s)
                 <div class="stat-card-bg rounded-xl p-6 relative overflow-hidden shadow-sm">
                     <div class="absolute top-0 right-0 w-20 h-20 rounded-full bg-white/5 -translate-y-6 translate-x-6"></div>
-                    <p class="text-[10px] uppercase font-bold tracking-widest text-[#94A3B8] mb-2">{{ $s['label'] }}</p>
+                    <p class="text-[10px] uppercase font-bold tracking-widest text-white/60 mb-2">{{ $s['label'] }}</p>
                     <p class="text-3xl font-extrabold text-white">{{ $s['value'] }}</p>
                     <div class="mt-4 flex items-center gap-2">
                         <svg class="w-4 h-4 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">

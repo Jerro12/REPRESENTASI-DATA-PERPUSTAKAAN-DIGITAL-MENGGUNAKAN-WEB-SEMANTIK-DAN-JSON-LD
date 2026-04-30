@@ -2,8 +2,8 @@
     <x-navbar />
     <!-- Hero -->
     <section class="hero-gradient text-primary-foreground py-24 relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 pointer-events-none" 
-             style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.4\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')">
+        <div class="absolute inset-0 opacity-30 pointer-events-none" 
+             style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%2367e8f9\' fill-opacity=\'0.6\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')">
         </div>
         <div class="max-w-7xl mx-auto px-6 relative">
             <div class="max-w-2xl animate-fade-in text-left">
@@ -12,9 +12,9 @@
                     SMA 4 PINRANG
                 </div>
                 <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-[1.1] tracking-tight">
-                    Jembatan Menuju<br /><span class="text-accent underline decoration-white/20 underline-offset-8 italic">Ilmu Pengetahuan</span>
+                    Jembatan Menuju<br /><span class=" underline decoration-white/20 underline-offset-8 italic">Ilmu Pengetahuan</span>
                 </h1>
-                <p class="text-lg opacity-90 mb-10 leading-relaxed text-sidebar-text">
+                <p class="text-lg opacity-100 mb-10 leading-relaxed text-white">
                     Selamat datang di Library Hub SMA 4 Pinrang. Temukan ribuan koleksi buku digital, 
                     telusuri berdasarkan kategori favorit Anda, dan nikmati kemudahan akses literasi kapan pun.
                 </p>
@@ -47,7 +47,7 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold uppercase tracking-widest text-[#94A3B8] opacity-70">Total Buku</p>
+                            <p class="text-[11px] font-bold uppercase tracking-widest text-blue-100 opacity-90">Total Buku</p>
                             <p class="text-4xl font-black text-white leading-none mt-1">{{ number_format($stats['total_books']) }}</p>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold uppercase tracking-widest text-[#94A3B8] opacity-70">Kategori</p>
+                            <p class="text-[11px] font-bold uppercase tracking-widest text-blue-100 opacity-90">Kategori</p>
                             <p class="text-4xl font-black text-white leading-none mt-1">{{ number_format($stats['total_categories']) }}</p>
                         </div>
                     </div>
@@ -75,7 +75,7 @@
                             </svg>
                         </div>
                         <div>
-                            <p class="text-[11px] font-bold uppercase tracking-widest text-[#94A3B8] opacity-70">Penulis</p>
+                            <p class="text-[11px] font-bold uppercase tracking-widest text-blue-100 opacity-90">Penulis</p>
                             <p class="text-4xl font-black text-white leading-none mt-1">{{ number_format($stats['total_writers']) }}</p>
                         </div>
                     </div>
@@ -115,15 +115,6 @@
                 <h2 class="text-3xl font-extrabold text-foreground tracking-tight">Berdasarkan Kategori</h2>
                 <p class="text-muted-foreground mt-3 uppercase text-[11px] font-bold tracking-[0.2em]">Temukan Minat Bacaan Anda</p>
             </div>
-            
-                <div class="mt-12">
-                    <a href="{{ route('kategori.index') }}" class="inline-flex items-center gap-3 px-8 py-3 bg-primary/5 text-primary rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm">
-                        Eksplorasi Semua Kategori
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-                    </a>
-                </div>
-            </div>
-            
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
                 @foreach ($categories as $k)
                     <a href="{{ route('katalog.index', ['kategori' => $k->id]) }}" class="bg-card border border-border rounded-3xl p-8 text-center hover:border-primary hover:shadow-2xl transition-all group hover:-translate-y-2 shadow-sm">
@@ -136,6 +127,13 @@
                         <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest opacity-60">{{ $k->books_count }} buku</p>
                     </a>
                 @endforeach
+            </div>
+
+            <div class="mt-12">
+                <a href="{{ route('kategori.index') }}" class="inline-flex items-center gap-3 px-8 py-3 bg-primary/5 text-primary rounded-2xl font-black text-[11px] uppercase tracking-widest hover:bg-primary hover:text-white transition-all shadow-sm">
+                    Eksplorasi Semua Kategori
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+                </a>
             </div>
         </div>
     </section>
@@ -152,12 +150,12 @@
                         </div>
                         <span class="text-3xl font-black tracking-tight cursor-default">SIPerpus</span>
                     </div>
-                    <p class="text-sidebar-text text-sm max-w-sm leading-relaxed font-medium">Sistem Informasi Perpustakaan Digital SMA 4 Pinrang. Berbasis Web Semantik & JSON-LD untuk memfasilitasi kebutuhan literasi masa depan.</p>
+                    <p class="text-white opacity-90 text-sm max-w-sm leading-relaxed font-medium">Sistem Informasi Perpustakaan Digital SMA 4 Pinrang. Berbasis Web Semantik & JSON-LD untuk memfasilitasi kebutuhan literasi masa depan.</p>
                 </div>
                 <div class="md:text-right border-l md:border-l-0 md:border-r border-white/10 md:pr-0">
                     <p class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-3">Lokasi</p>
                     <p class="text-white font-black text-xl mb-3 tracking-tight">SMA 4 PINRANG</p>
-                    <p class="text-sidebar-text text-sm leading-relaxed opacity-80 font-medium">
+                    <p class="text-white text-sm leading-relaxed opacity-90 font-medium">
                         2JJ8+MC6, Watang Suppa, Kec. Suppa,<br/>
                         Kabupaten Pinrang, Sulawesi Selatan 91272
                     </p>
@@ -165,10 +163,10 @@
             </div>
 
             <div class="pt-10 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-6 px-4 md:px-0">
-                <p class="text-[11px] font-black uppercase tracking-[0.2em] text-sidebar-text opacity-60 italic">&copy; {{ date('Y') }} SIPerpus Ecosystem &middot; SMA 4 Pinrang</p>
+                <p class="text-[11px] font-black uppercase tracking-[0.2em] text-white opacity-70 italic">&copy; {{ date('Y') }} SIPerpus Ecosystem &middot; SMA 4 Pinrang</p>
                 <div class="flex gap-8">
-                    <a href="#" class="text-xs font-bold text-sidebar-text hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="#" class="text-xs font-bold text-sidebar-text hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="text-xs font-bold text-blue-100 hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="text-xs font-bold text-blue-100 hover:text-white transition-colors">Terms of Service</a>
                 </div>
             </div>
         </div>
