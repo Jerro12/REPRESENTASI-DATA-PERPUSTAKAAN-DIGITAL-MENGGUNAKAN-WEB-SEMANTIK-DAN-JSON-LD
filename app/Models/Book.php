@@ -27,6 +27,7 @@ class Book extends Model
         'cover',
         'status',
         'jumlah_halaman',
+        'stok_buku',
     ];
 
     public function category()
@@ -48,6 +49,11 @@ class Book extends Model
     public function favoredByUsers()
     {
         return $this->belongsToMany(User::class, 'book_user')->withTimestamps();
+    }
+
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
     }
 
     /**

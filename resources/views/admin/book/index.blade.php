@@ -19,6 +19,7 @@
             deskripsi: '',
             subjek: '',
             jumlah_halaman: '',
+            stok_buku: 0,
             status: 'aktif',
             cover: '',
             file_path: '',
@@ -28,7 +29,7 @@
         openAdd() {
             this.isEdit = false;
             this.actionUrl = '{{ route('admin.books.store') }}';
-            this.form = { id: '', kode_buku: '', judul: '', penulis: '', penerbit: '', tahun_terbit: '{{ date('Y') }}', isbn: '', bahasa: 'Indonesia', category_id: '', deskripsi: '', subjek: '', jumlah_halaman: '', status: 'aktif', cover: '', file_path: '', created_at: '', updated_at: '' };
+            this.form = { id: '', kode_buku: '', judul: '', penulis: '', penerbit: '', tahun_terbit: '{{ date('Y') }}', isbn: '', bahasa: 'Indonesia', category_id: '', deskripsi: '', subjek: '', jumlah_halaman: '', stok_buku: 0, status: 'aktif', cover: '', file_path: '', created_at: '', updated_at: '' };
             this.showModal = true;
         },
         openEdit(book) {
@@ -99,6 +100,9 @@
                                 Tahun</th>
                             <th
                                 class="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                                Stok</th>
+                            <th
+                                class="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                                 Status</th>
                             <th
                                 class="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -128,6 +132,11 @@
                                     <span class="badge-info">{{ $book->category->nama ?? '-' }}</span>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-muted-foreground">{{ $book->tahun_terbit }}</td>
+                                <td class="px-6 py-4">
+                                    <span class="text-sm font-bold {{ $book->stok_buku > 0 ? 'text-emerald-500' : 'text-destructive' }}">
+                                        {{ $book->stok_buku }}
+                                    </span>
+                                </td>
                                 <td class="px-6 py-4">
                                     @if ($book->status === 'aktif')
                                         <span class="badge-success">Aktif</span>
@@ -243,9 +252,25 @@
                                 class="w-full px-4 py-3 bg-secondary border-none rounded-xl text-sm focus:ring-2 focus:ring-ring transition-all" />
                         </div>
                         <div class="space-y-1.5">
+                            <label class="text-xs font-bold uppercase tracking-widest text-[#94A3B8]">Stok Buku</label>
+                            <input name="stok_buku" type="number" required x-model="form.stok_buku"
+                                class="w-full px-4 py-3 bg-secondary border-none rounded-xl text-sm focus:ring-2 focus:ring-ring transition-all" />
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-5">
+                        <div class="space-y-1.5">
                             <label class="text-xs font-bold uppercase tracking-widest text-[#94A3B8]">Bahasa</label>
                             <input name="bahasa" x-model="form.bahasa"
                                 class="w-full px-4 py-3 bg-secondary border-none rounded-xl text-sm focus:ring-2 focus:ring-ring transition-all" />
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-bold uppercase tracking-widest text-[#94A3B8]">Status</label>
+                            <select name="status" x-model="form.status"
+                                class="w-full px-4 py-3 bg-secondary border-none rounded-xl text-sm focus:ring-2 focus:ring-ring transition-all">
+                                <option value="aktif">Aktif</option>
+                                <option value="nonaktif">Nonaktif</option>
+                            </select>
                         </div>
                     </div>
 
@@ -280,14 +305,6 @@
                         </div>
                     </div>
 
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-bold uppercase tracking-widest text-[#94A3B8]">Status</label>
-                        <select name="status" x-model="form.status"
-                            class="w-full px-4 py-3 bg-secondary border-none rounded-xl text-sm focus:ring-2 focus:ring-ring transition-all">
-                            <option value="aktif">Aktif</option>
-                            <option value="nonaktif">Nonaktif</option>
-                        </select>
-                    </div>
 
                     <div class="space-y-1.5">
                         <label class="text-xs font-bold uppercase tracking-widest text-[#94A3B8]">Deskripsi</label>

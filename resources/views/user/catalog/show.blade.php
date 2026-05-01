@@ -46,8 +46,10 @@
                     <div class="flex-1">
                         <div class="flex flex-wrap items-center gap-3 mb-4">
                             <span class="badge-info px-4 py-1.5 rounded-full text-[11px] font-black uppercase tracking-[0.2em] shadow-sm">{{ $book->category->nama ?? 'Buku' }}</span>
-                            @if($book->stok > 0)
-                                <span class="badge-success px-4 py-1.5 rounded-full text-[11px] font-black tracking-[0.2em] shadow-sm lowercase first-letter:uppercase">✓ Tersedia</span>
+                            @if($book->stok_buku > 0)
+                                <span class="badge-success px-4 py-1.5 rounded-full text-[11px] font-black tracking-[0.2em] shadow-sm lowercase first-letter:uppercase">✓ Tersedia ({{ $book->stok_buku }})</span>
+                            @else
+                                <span class="badge-danger px-4 py-1.5 rounded-full text-[11px] font-black tracking-[0.2em] shadow-sm lowercase first-letter:uppercase text-red-500 bg-red-500/10 border border-red-500/20">✕ Habis</span>
                             @endif
                         </div>
                         
@@ -93,6 +95,7 @@
                             @auth
                                 @php
                                     $isFavored = auth()->user()->favoriteBooks()->where('book_id', $book->id)->exists();
+                                    $isBorrowed = auth()->user()->borrowings()->where('book_id', $book->id)->where('status', 'borrowed')->exists();
                                 @endphp
                                 <form action="{{ route('koleksi.toggle', $book->id) }}" method="POST" class="w-full sm:w-auto">
                                     @csrf
@@ -108,10 +111,34 @@
                                         </x-button>
                                     @endif
                                 </form>
+
+                                <form action="{{ route('borrowing.store', $book->id) }}" method="POST" class="w-full sm:w-auto">
+                                    @csrf
+                                    @if($isBorrowed)
+                                        <x-button type="button" variant="outline" size="lg" class="rounded-2xl w-full sm:w-auto border-emerald-500/30 text-emerald-500 bg-emerald-500/5 cursor-not-allowed" disabled>
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                                            Sedang Dipinjam
+                                        </x-button>
+                                    @elseif($book->stok_buku > 0)
+                                        <x-button type="submit" variant="default" size="lg" class="rounded-2xl shadow-xl shadow-accent/30 w-full sm:w-auto bg-slate-900 text-white hover:bg-slate-800 group/btn">
+                                            <svg class="w-5 h-5 mr-2 transition-transform group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            Pinjam Buku
+                                        </x-button>
+                                    @else
+                                        <x-button type="button" variant="outline" size="lg" class="rounded-2xl w-full sm:w-auto opacity-50 cursor-not-allowed" disabled>
+                                            Stok Habis
+                                        </x-button>
+                                    @endif
+                                </form>
                             @else
                                 <x-button variant="default" size="lg" class="rounded-2xl shadow-xl shadow-primary/30 w-full sm:w-auto" onclick="window.location.href='{{ route('login') }}'">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"/></svg>
                                     Login untuk Menyimpan
+                                </x-button>
+
+                                <x-button variant="outline" size="lg" class="rounded-2xl w-full sm:w-auto" onclick="window.location.href='{{ route('login') }}'">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    Login untuk Pinjam
                                 </x-button>
                             @endauth
                             

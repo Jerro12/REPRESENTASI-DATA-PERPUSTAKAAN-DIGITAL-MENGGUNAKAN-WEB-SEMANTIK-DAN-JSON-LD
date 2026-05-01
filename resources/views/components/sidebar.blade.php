@@ -28,6 +28,7 @@
                         ['label' => 'Dashboard', 'route' => 'admin/dashboard', 'active' => request()->is('admin/dashboard'), 'icon' => 'grid'],
                         ['label' => 'Data Buku', 'href' => route('admin.books.index'), 'active' => request()->routeIs('admin.books.*'), 'icon' => 'book'],
                         ['label' => 'Kategori', 'href' => route('admin.categories.index'), 'active' => request()->routeIs('admin.categories.*'), 'icon' => 'tags'],
+                        ['label' => 'Peminjaman', 'href' => route('admin.borrowings.index'), 'active' => request()->routeIs('admin.borrowings.*'), 'icon' => 'clock'],
                     ];
                 @endphp
 
@@ -43,6 +44,8 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" /></svg>
                             @elseif($item['icon'] == 'tags')
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82zM7 7h.01" /></svg>
+                            @elseif($item['icon'] == 'clock')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                             @endif
                         </div>
 

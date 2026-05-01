@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\User\CatalogController;
 use App\Http\Controllers\User\SearchEngineController;
 use App\Http\Controllers\User\KoleksiController;
+use App\Http\Controllers\User\BorrowingController;
 use App\Http\Controllers\LandingController;
 
 
@@ -40,6 +41,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/koleksi/toggle/{book}', [KoleksiController::class, 'toggle'])
         ->name('koleksi.toggle');
+
+    Route::post('/pinjam/{book}', [BorrowingController::class, 'store'])
+        ->name('borrowing.store');
 });
 
 
@@ -74,6 +78,11 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('books/{book}/edit', [BookController::class, 'edit'])->name('books.edit');
         Route::put('books/{book}', [BookController::class, 'update'])->name('books.update');
         Route::delete('books/{book}', [BookController::class, 'destroy'])->name('books.destroy');
+
+        // Peminjaman
+        Route::get('borrowings', [\App\Http\Controllers\Admin\BorrowingController::class, 'index'])->name('borrowings.index');
+        Route::post('borrowings/{borrowing}/return', [\App\Http\Controllers\Admin\BorrowingController::class, 'returnBook'])->name('borrowings.return');
+        Route::delete('borrowings/{borrowing}', [\App\Http\Controllers\Admin\BorrowingController::class, 'destroy'])->name('borrowings.destroy');
     });
 
 require __DIR__ . '/auth.php';

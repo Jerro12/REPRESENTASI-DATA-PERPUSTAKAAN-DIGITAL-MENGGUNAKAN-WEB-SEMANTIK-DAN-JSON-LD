@@ -49,6 +49,7 @@ class BookController extends Controller
             'subjek' => 'nullable|string|max:255',
             'status' => 'nullable|in:aktif,nonaktif',
             'jumlah_halaman' => 'nullable|integer',
+            'stok_buku' => 'nullable|integer|min:0',
             'file_path' => 'nullable|file|mimes:pdf|max:10240', // Max 10MB
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Max 2MB
         ]);
@@ -93,6 +94,7 @@ class BookController extends Controller
             'subjek' => 'nullable|string|max:255',
             'status' => 'nullable|in:aktif,nonaktif',
             'jumlah_halaman' => 'nullable|integer',
+            'stok_buku' => 'nullable|integer|min:0',
             'file_path' => 'nullable|file|mimes:pdf|max:10240',
             'cover' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
