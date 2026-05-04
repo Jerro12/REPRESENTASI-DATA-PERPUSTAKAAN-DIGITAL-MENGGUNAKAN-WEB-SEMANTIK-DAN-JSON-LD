@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\Book;
 use App\Models\Category;
 use App\Helpers\SchemaHelper;
+use Sastrawi\Stemmer\StemmerFactory;
 
 class SearchEngineController extends Controller
+
 {
     /**
      * Memproses pencarian cerdas (Natural Language Search) layaknya Search Engine.
@@ -94,23 +96,18 @@ class SearchEngineController extends Controller
 
             // -- 6. Menghapus Stop Words (NLP Ekstensi Kata-kata Gaul/Sehari-hari) --
             $stopWords = [
-                // Kata umum entitas
                 'buku', 'novel', 'komik', 'majalah', 'jurnal', 'makalah', 'skripsi', 'artikel', 'karya', 'bacaan', 'literatur',
-                // Kata kerja / minat
                 'saya', 'suka', 'baca', 'membaca', 'mencari', 'minta', 'tolong', 'cari', 'carikan', 'butuh', 'recommend', 'rekomendasi',
                 'lihat', 'menampilkan', 'tampilkan', 'menemukan', 'temukan', 'pengen', 'ingin', 'inginkan', 'mau', 'dapat', 'dapatkan',
                 'pilih', 'berikan', 'kasih', 'bantu', 'coba',
-                // Kata ganti / konjungsi / preposisi
                 'yang', 'pada', 'tentang', 'kategori', 'penulis', 'judul', 'tema', 'genre', 'topik', 'bidang', 'jenis', 'tipe', 'seri',
                 'di', 'dan', 'atau', 'ke', 'dari', 'untuk', 'adalah', 'ini', 'itu', 'buat', 'seputar', 'mengenai', 'terkait',
-                // Kata tanya / percakapan
                 'ada', 'tidak', 'berjudul', 'oleh', 'karangan', 'penerbit', 'terbitan', 'tahun', 'terbit', 'edisi', 'volume', 'jilid', 
                 'hal', 'halaman', 'bab', 'nomor', 'apakah', 'siapa', 'apa', 'saja', 'daftar', 'koleksi', 'info', 'bagaimana', 'mana', 
                 'dimana', 'kapan', 'punya', 'gak', 'dong', 'sih', 'ya', 'no', 'dong', 'deh',
-                // Kata kerja pasif / tambahan pertanyaan / percakapan
                 'ditulis', 'dibuat', 'dikarang', 'diterbitkan', 'dicetak', 'kenapa', 'mengapa', 'gimana', 'gmn',
                 'min', 'halo', 'hai', 'isinya', 'membahas', 'aja', 'kak', 'bang', 'pak', 'bu', 'judulnya', 'penulisnya', 'penerbitnya',
-                'nggak', 'ngga', 'caranya', 'bahas', 'bahasnya'
+                'nggak', 'ngga', 'caranya', 'bahas', 'bahasnya', 'paling', 'sangat', 'amat', 'ter'
             ];
             
             foreach ($stopWords as $word) {
@@ -128,56 +125,59 @@ class SearchEngineController extends Controller
         // Prioritaskan parameter dropdown penulis, lalu hasil NLP author extraction
         $finalAuthor = $penulis ?: $smartAuthor;
 
-        $booksQuery = Book::with('category')->withCount('favoredByUsers');
-
-        // Text Search
+        // -- SEARCH LOGIC WITH SCOUT & SASTRAWI --
         if (!empty($cleanQ)) {
-            $words = array_filter(explode(' ', $cleanQ));
-            $booksQuery->where(function ($query) use ($words) {
-                foreach ($words as $word) {
-                    $query->where(function ($q) use ($word) {
-                        $q->where('judul', 'like', "%$word%")
-                          ->orWhere('penulis', 'like', "%$word%")
-                          ->orWhere('deskripsi', 'like', "%$word%")
-                          ->orWhere('penerbit', 'like', "%$word%")
-                          ->orWhere('isbn', 'like', "%$word%")
-                          ->orWhere('subjek', 'like', "%$word%");
-                    });
-                }
-            });
+            // Inisialisasi Sastrawi Stemmer
+            $stemmerFactory = new StemmerFactory();
+            $stemmer = $stemmerFactory->createStemmer();
+            $stemmedQ = $stemmer->stem($cleanQ);
+
+            // Gunakan Scout untuk pencarian (TNTSearch)
+            $booksQuery = Book::search($stemmedQ);
+        } else {
+            // Pencarian tanpa kata kunci (tampilkan semua dengan filter)
+            $booksQuery = Book::query();
         }
 
-        // Sidebar / Smart Filter
+        // Apply filters to Scout Builder or Eloquent Query
         if ($finalCategory) {
             $booksQuery->where('category_id', $finalCategory);
-        }
-        if ($smartPublisher) {
-            $pubWords = array_filter(explode(' ', $smartPublisher));
-            foreach ($pubWords as $pw) {
-                $booksQuery->where('penerbit', 'like', '%' . $pw . '%');
-            }
         }
         if ($finalYear) {
             $booksQuery->where('tahun_terbit', $finalYear);
         }
         if ($finalAuthor) {
-            // Jika hasil dari NLP smartAuthor, kita gunakan per kata agar lebih fleksibel (misal: Prof. Arya)
-            if ($smartAuthor && empty($penulis)) {
-                $authWords = array_filter(explode(' ', $finalAuthor));
-                foreach ($authWords as $aw) {
-                    $booksQuery->where('penulis', 'like', '%' . $aw . '%');
-                }
+            $booksQuery->where('penulis', $finalAuthor);
+        }
+
+        // Sorting & Eager Loading
+        if ($booksQuery instanceof \Laravel\Scout\Builder) {
+            // Terapkan Eager Loading
+            $booksQuery->query(function ($query) {
+                $query->with('category')->withCount('favoredByUsers');
+            });
+
+            // TERAPKAN SORTING LANGSUNG PADA SCOUT BUILDER
+            if ($sortField === 'favored_by_users_count') {
+                // Untuk virtual column, kita tetap di dalam query callback
+                $booksQuery->query(function($q) { $q->orderBy('favored_by_users_count', 'desc'); });
+            } elseif (!empty($cleanQ) && $sortField === 'created_at' && $sortDirection === 'desc') {
+                // Biarkan Relevansi
             } else {
-                $booksQuery->where('penulis', $finalAuthor); // Dari sidebar biasanya exact match
+                $booksQuery->orderBy($sortField, $sortDirection);
+            }
+        } else {
+
+
+
+            $booksQuery->with('category')->withCount('favoredByUsers');
+            if ($sortField === 'favored_by_users_count') {
+                $booksQuery->orderBy('favored_by_users_count', 'desc');
+            } else {
+                $booksQuery->orderBy($sortField, $sortDirection);
             }
         }
 
-        // Sorting Logic
-        if ($sortField === 'favored_by_users_count') {
-            $booksQuery->orderBy('favored_by_users_count', 'desc');
-        } else {
-            $booksQuery->orderBy($sortField, $sortDirection);
-        }
 
         $books = $booksQuery->paginate(12)->withQueryString();
 
@@ -186,9 +186,21 @@ class SearchEngineController extends Controller
         $years = Book::selectRaw('DISTINCT tahun_terbit')->orderBy('tahun_terbit', 'desc')->pluck('tahun_terbit');
         $authors = Book::selectRaw('DISTINCT penulis')->orderBy('penulis', 'asc')->pluck('penulis');
 
-        $schema = SchemaHelper::getLibrarySchema($books->getCollection());
+        $schema = SchemaHelper::getSearchResultsSchema($books->items(), $cleanQ);
 
-        // Kita bisa me-reuse view katalog dengan engine pencarian ini
-        return view('user.catalog.index', compact('books', 'categories', 'years', 'authors', 'schema', 'finalCategory', 'finalYear', 'finalAuthor'));
+        // Kirim $cleanQ sebagai 'q' agar highlight hanya pada kata kunci inti
+        return view('user.catalog.index', [
+            'books' => $books,
+            'categories' => $categories,
+            'years' => $years,
+            'authors' => $authors,
+            'schema' => $schema,
+            'finalCategory' => $finalCategory,
+            'finalYear' => $finalYear,
+            'finalAuthor' => $finalAuthor,
+            'q' => $cleanQ // Ini yang akan dipakai oleh x-book-card
+        ]);
     }
 }
+
+

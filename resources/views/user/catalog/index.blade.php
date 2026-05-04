@@ -125,8 +125,10 @@
                 @else
                     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                         @foreach ($books as $b)
-                            <x-book-card :book="$b" />
+                            <x-book-card :book="$b" :query="$q ?? request('q')" />
                         @endforeach
+
+
                     </div>
 
                     <div class="mt-12">

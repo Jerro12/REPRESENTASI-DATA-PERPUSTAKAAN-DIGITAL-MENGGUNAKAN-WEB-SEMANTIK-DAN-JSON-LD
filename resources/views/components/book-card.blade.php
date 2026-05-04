@@ -1,4 +1,4 @@
-@props(['book'])
+@props(['book', 'query' => null])
 
 <a href="{{ route('katalog.show', $book->id) }}" class="group block h-full">
     <div class="bg-card border border-border rounded-3xl overflow-hidden hover:shadow-2xl transition-all hover:-translate-y-2 flex flex-col h-full shadow-sm">
@@ -13,20 +13,38 @@
                 </div>
             @endif
             <div class="absolute top-4 left-4">
-                <span class="badge-info backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-widest shadow-lg">{{ $book->category->nama ?? 'Buku' }}</span>
+                <span class="badge-info backdrop-blur-md px-3 py-1 text-[10px] font-black uppercase tracking-widest shadow-lg">
+                    {!! \App\Models\Book::highlightText($book->category->nama ?? 'Buku', $query) !!}
+                </span>
             </div>
+
         </div>
         <div class="p-6 flex-1 flex flex-col">
-            <h3 class="font-bold text-foreground text-lg group-hover:text-primary transition-colors line-clamp-1 truncate">{{ $book->judul }}</h3>
-            <p class="text-sm text-muted-foreground mt-1 mb-4 flex-1 line-clamp-1">{{ $book->penulis }}</p>
+            <h3 class="font-bold text-foreground text-lg group-hover:text-primary transition-colors line-clamp-1 truncate">
+                {!! $book->getHighlighted('judul', $query) !!}
+            </h3>
+            <p class="text-xs text-muted-foreground mt-1 flex-1 line-clamp-1">
+                Oleh: {!! $book->getHighlighted('penulis', $query) !!}
+            </p>
+            
+            @if($query)
+                <div class="mt-3 text-[11px] text-slate-500 line-clamp-2 italic leading-relaxed border-l-2 border-primary/20 pl-2">
+                    {!! $book->getHighlighted('deskripsi', $query) !!}
+                </div>
+            @endif
+
+
             <div class="flex items-center justify-between pt-4 border-t border-border mt-auto">
                 <div class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                     {{ $book->tahun_terbit }} · {{ $book->penerbit }}
                 </div>
-                @if($book->stok > 0)
+                @if($book->stok_buku > 0)
                     <span class="badge-success text-[10px] font-black tracking-widest uppercase">Tersedia</span>
+                @else
+                    <span class="badge-danger text-[10px] font-black tracking-widest uppercase">Kosong</span>
                 @endif
             </div>
         </div>
     </div>
 </a>
+

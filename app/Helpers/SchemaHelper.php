@@ -41,4 +41,27 @@ class SchemaHelper
         $bookSchema['@context'] = "https://schema.org";
         return $bookSchema;
     }
+
+    public static function getSearchResultsSchema($books, $query = '')
+    {
+        $schema = [
+            "@context" => "https://schema.org",
+            "@type" => "ItemList",
+            "name" => "Hasil Pencarian: " . ($query ?: 'Semua Katalog'),
+            "description" => "Daftar buku hasil pencarian di Perpustakaan Digital SMA 4 Pinrang",
+            "numberOfItems" => count($books),
+            "itemListElement" => []
+        ];
+
+        foreach ($books as $index => $book) {
+            $schema['itemListElement'][] = [
+                "@type" => "ListItem",
+                "position" => $index + 1,
+                "item" => array_merge(['@context' => 'https://schema.org'], $book->toJsonLd())
+            ];
+        }
+
+        return $schema;
+    }
 }
+
