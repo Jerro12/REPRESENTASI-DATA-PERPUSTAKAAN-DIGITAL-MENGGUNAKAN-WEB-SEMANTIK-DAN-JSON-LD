@@ -77,7 +77,7 @@
                             <select name="kategori" onchange="this.form.submit()" class="w-full px-4 py-3 bg-secondary border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 transition-all font-medium">
                                 <option value="">Semua Kategori</option>
                                 @foreach($categories as $k)
-                                    <option value="{{ $k->id }}" {{ (isset($finalCategory) ? $finalCategory : request('kategori')) == $k->id ? 'selected' : '' }}>{{ $k->nama }}</option>
+                                    <option value="{{ $k->id }}" {{ in_array($k->id, $activeCategories ?? []) ? 'selected' : '' }}>{{ $k->nama }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -107,6 +107,71 @@
 
             <!-- Results -->
             <div class="flex-1">
+                {{-- ====== SEARCH FEEDBACK PANEL (seperti Google) ====== --}}
+                @if(request('q') && !empty($searchFeedback))
+                    <div class="mb-6 p-4 bg-card border border-border rounded-2xl shadow-sm" style="border-left: 4px solid hsl(213 100% 26%);">
+                        <div class="flex items-start gap-3">
+                            <div class="mt-0.5">
+                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Mesin Pencari Memahami</p>
+                                <div class="flex flex-wrap gap-2">
+                                    {{-- Kategori Terdeteksi --}}
+                                    @if(!empty($searchFeedback['categories']))
+                                        @foreach($searchFeedback['categories'] as $catName)
+                                            <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ring-1" style="background: hsl(213 100% 96%); color: hsl(213 100% 26%); ring-color: hsl(213 100% 86%);">
+                                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                                                {{ $catName }}
+                                            </span>
+                                        @endforeach
+                                    @endif
+
+                                    {{-- Urutan --}}
+                                    @if(!empty($searchFeedback['sort']))
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ring-1" style="background: hsl(142 76% 94%); color: hsl(142 71% 30%); ring-color: hsl(142 60% 80%);">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
+                                            {{ $searchFeedback['sort'] }}
+                                        </span>
+                                    @endif
+
+                                    {{-- Tahun --}}
+                                    @if(!empty($searchFeedback['year']))
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ring-1" style="background: hsl(38 92% 94%); color: hsl(38 92% 35%); ring-color: hsl(38 80% 75%);">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                                            Tahun {{ $searchFeedback['year'] }}
+                                        </span>
+                                    @endif
+
+                                    {{-- Penulis --}}
+                                    @if(!empty($searchFeedback['author']))
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ring-1" style="background: hsl(280 67% 94%); color: hsl(280 67% 35%); ring-color: hsl(280 50% 80%);">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                            Penulis: {{ $searchFeedback['author'] }}
+                                        </span>
+                                    @endif
+
+                                    {{-- Penerbit --}}
+                                    @if(!empty($searchFeedback['publisher']))
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ring-1" style="background: hsl(200 80% 94%); color: hsl(200 80% 30%); ring-color: hsl(200 60% 80%);">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                                            Penerbit: {{ $searchFeedback['publisher'] }}
+                                        </span>
+                                    @endif
+
+                                    {{-- Kata Kunci Sisa --}}
+                                    @if(!empty($searchFeedback['keywords']))
+                                        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ring-1" style="background: hsl(0 0% 95%); color: hsl(0 0% 30%); ring-color: hsl(0 0% 80%);">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                            "{{ $searchFeedback['keywords'] }}"
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="flex items-center justify-between mb-6">
                     <p class="text-sm font-medium text-slate-600">
                         Menampilkan <span class="text-primary font-black">{{ $books->firstItem() ?? 0 }}-{{ $books->lastItem() ?? 0 }}</span> dari <span class="text-primary font-black">{{ $books->total() }}</span> koleksi

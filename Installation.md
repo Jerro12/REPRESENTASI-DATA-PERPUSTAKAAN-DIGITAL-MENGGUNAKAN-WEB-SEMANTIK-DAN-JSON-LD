@@ -20,3 +20,12 @@ npm install
 npm run dev
 php artisan serve
 ```
+
+### Penting: Sinkronisasi Mesin Pencari
+Karena proyek ini menggunakan **Laravel Scout** dengan **TNTSearch** dan **Sastrawi**, Kamu wajib membangun index pencarian agar fitur pencarian cerdas berfungsi:
+
+```bash
+php artisan scout:import "App\Models\Book"
+```
+
+Jika kamu menambah data dalam jumlah besar langsung melalui database (bukan lewat aplikasi), jalankan perintah di atas kembali untuk menyegarkan index.

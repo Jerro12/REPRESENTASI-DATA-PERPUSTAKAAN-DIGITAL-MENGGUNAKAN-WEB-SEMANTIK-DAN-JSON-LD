@@ -125,6 +125,7 @@ class Book extends Model
             'isbn' => $this->isbn,
             'deskripsi' => $this->deskripsi . ' ' . $deskripsiStemmed,
             'subjek' => $this->subjek,
+            'category_id' => (int) $this->category_id,
             'kategori' => $this->category ? $this->category->nama : null,
         ];
     }
@@ -133,12 +134,14 @@ class Book extends Model
     /**
      * Helper untuk menyoroti (highlight) kata kunci pencarian pada teks apapun
      */
-    public static function highlightText($text, $query)
+    public static function highlightText($text, $query, $stemmer = null)
     {
         if (!$query || !$text) return $text;
 
-        $stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
-        $stemmer = $stemmerFactory->createStemmer();
+        if (!$stemmer) {
+            $stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
+            $stemmer = $stemmerFactory->createStemmer();
+        }
         
         $words = array_filter(explode(' ', $query));
         
@@ -160,19 +163,20 @@ class Book extends Model
         if (empty($searchTerms)) return $text;
 
         $pattern = '/(' . implode('|', array_map(fn($t) => preg_quote($t, '/'), $searchTerms)) . ')/i';
-        return preg_replace($pattern, '<mark class="bg-yellow-200 px-1 rounded text-black">$1</mark>', $text);
+        // Gunakan inline style agar tidak terkena purge Tailwind
+        return preg_replace($pattern, '<mark style="background-color: #fef08a; color: #000; padding: 0 2px; border-radius: 4px;">$1</mark>', $text);
     }
 
     public function getHighlighted($field, $query)
     {
-        $text = $this->{$field};
-        if (!$query) return $text;
+        $text = $this->{$field} ?? '';
+        if (!$query || empty($text)) return $text;
 
-        $words = array_filter(explode(' ', $query));
-        $searchTerms = [];
         $stemmerFactory = new \Sastrawi\Stemmer\StemmerFactory();
         $stemmer = $stemmerFactory->createStemmer();
 
+        $words = array_filter(explode(' ', $query));
+        $searchTerms = [];
         foreach($words as $word) {
             if (strlen($word) < 3) continue;
             $searchTerms[] = $word;
@@ -183,18 +187,25 @@ class Book extends Model
         }
 
         // Ambil potongan teks untuk deskripsi (lebih pendek agar muat di 2 baris kartu)
-        if ($field === 'deskripsi' && strlen($text) > 90) {
+        if ($field === 'deskripsi' && strlen($text) > 120) {
+            $foundPos = -1;
             foreach ($searchTerms as $term) {
                 $pos = stripos($text, $term);
                 if ($pos !== false) {
-                    $start = max(0, $pos - 40);
-                    $text = ($start > 0 ? '...' : '') . mb_substr($text, $start, 90) . '...';
+                    $foundPos = $pos;
                     break;
                 }
             }
+
+            if ($foundPos !== -1) {
+                $start = max(0, $foundPos - 50);
+                $text = ($start > 0 ? '...' : '') . mb_substr($text, $start, 120) . '...';
+            } else {
+                $text = mb_substr($text, 0, 120) . '...';
+            }
         }
 
-        return self::highlightText($text, $query);
+        return self::highlightText($text, $query, $stemmer);
     }
 
 
