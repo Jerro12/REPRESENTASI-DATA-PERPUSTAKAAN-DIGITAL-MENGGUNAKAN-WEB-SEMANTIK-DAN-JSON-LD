@@ -115,8 +115,8 @@
                                 <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
                             </div>
                             <div class="flex-1">
-                                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Mesin Pencari Memahami</p>
-                                <div class="flex flex-wrap gap-2">
+                                <p class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Mesin Pencari Memahami (NLP)</p>
+                                <div class="flex flex-wrap gap-2 mb-4">
                                     {{-- Kategori Terdeteksi --}}
                                     @if(!empty($searchFeedback['categories']))
                                         @foreach($searchFeedback['categories'] as $catName)
@@ -167,6 +167,25 @@
                                         </span>
                                     @endif
                                 </div>
+
+                                {{-- Ekstraksi Web Semantik (SPO) --}}
+                                @if(!empty($spoTriplets))
+                                    <div class="mt-4 pt-4 border-t border-border/50">
+                                        <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+                                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                            Ekstraksi Web Semantik (S-P-O)
+                                        </p>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                                            @foreach($spoTriplets as $index => $triple)
+                                                <div class="flex items-center bg-white border border-slate-200 rounded-lg overflow-hidden text-[11px] shadow-sm font-mono">
+                                                    <div class="px-2.5 py-1.5 bg-slate-100 text-slate-600 font-bold border-r border-slate-200" title="Subjek">{{ $triple['subject'] }}</div>
+                                                    <div class="px-2.5 py-1.5 text-primary bg-primary/5 font-semibold flex-1 border-r border-slate-200 text-center" title="Predikat">{{ $triple['predicate'] }}</div>
+                                                    <div class="px-2.5 py-1.5 text-slate-700 bg-slate-50 font-medium truncate max-w-[120px]" title="Objek">{{ $triple['object'] }}</div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>

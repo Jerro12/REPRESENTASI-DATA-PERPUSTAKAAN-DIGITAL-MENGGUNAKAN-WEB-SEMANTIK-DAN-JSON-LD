@@ -39,12 +39,25 @@ class SearchEngineController extends Controller
         $smartAuthor = null;
         $smartPublisher = null;
         $cleanQ = $q;
-        $sortLabel = null; // Untuk feedback ke user
-        
+        $sortLabel = null;
         $sortField = 'tahun_terbit';
         $sortDirection = 'desc';
-
+        
+        // ====================================================
+        // STEP 0: BLOKIR PENCARIAN ISENG / UJI COBA
+        // ====================================================
+        $isBlockedQuery = false;
         if ($q) {
+            $testWords = ['tes', 'test', 'tests', 'testing', 'coba', 'mencoba', 'percobaan', 'uji', 'ujian', 'menguji', 'cek', 'check', 'checking', 'halo', 'hai', 'hello', 'ping', 'p', 'asdf', '123', '1234'];
+            $coreQ = trim(strtolower(preg_replace('/\b(cari|carikan|buku|tolong|coba)\b/i', '', strtolower($q))));
+            
+            if (in_array(strtolower(trim($q)), $testWords) || in_array($coreQ, $testWords)) {
+                $isBlockedQuery = true;
+                $cleanQ = ''; // Kosongkan query agar tidak diproses lebih lanjut
+            }
+        }
+
+        if ($q && !$isBlockedQuery) {
             // ====================================================
             // STEP 1: PRE-PROCESSING
             // ====================================================
@@ -232,7 +245,11 @@ class SearchEngineController extends Controller
         // Bangun query Eloquent
         $booksQuery = Book::query()->with('category')->withCount('favoredByUsers');
 
-        // -- FILTER MANUAL DARI SIDEBAR (selalu ketat) --
+        // -- PENGECUALIAN UNTUK PENCARIAN ISENG --
+        if ($isBlockedQuery) {
+            $booksQuery->where('id', '<', 0); // Force hasil kosong
+        } else {
+            // -- FILTER MANUAL DARI SIDEBAR (selalu ketat) --
         if ($hasManualCategory) {
             $booksQuery->where('category_id', $kategori);
         }
@@ -362,6 +379,8 @@ class SearchEngineController extends Controller
             }
         }
 
+        }
+
         // -- FILTER TAMBAHAN (Tahun, Penulis, Penerbit) --
         if ($finalYear) {
             $booksQuery->where('tahun_terbit', $finalYear);
@@ -393,23 +412,33 @@ class SearchEngineController extends Controller
 
         // Bangun metadata feedback untuk ditampilkan ke user
         $searchFeedback = [];
+        $spoTriplets = []; // Array untuk menampung format Subjek-Predikat-Objek
+        
         if (!empty($smartCategoryNames)) {
             $searchFeedback['categories'] = $smartCategoryNames;
+            foreach ($smartCategoryNames as $catName) {
+                $spoTriplets[] = ['subject' => 'Buku', 'predicate' => 'memiliki_kategori', 'object' => $catName];
+            }
         }
         if ($sortLabel) {
             $searchFeedback['sort'] = $sortLabel;
+            $spoTriplets[] = ['subject' => 'Hasil_Pencarian', 'predicate' => 'diurutkan_berdasarkan', 'object' => $sortLabel];
         }
         if ($smartYear) {
             $searchFeedback['year'] = $smartYear;
+            $spoTriplets[] = ['subject' => 'Buku', 'predicate' => 'diterbitkan_pada_tahun', 'object' => $smartYear];
         }
         if ($smartAuthor) {
             $searchFeedback['author'] = $smartAuthor;
+            $spoTriplets[] = ['subject' => 'Buku', 'predicate' => 'ditulis_oleh', 'object' => $smartAuthor];
         }
         if ($smartPublisher) {
             $searchFeedback['publisher'] = $smartPublisher;
+            $spoTriplets[] = ['subject' => 'Buku', 'predicate' => 'diterbitkan_oleh', 'object' => $smartPublisher];
         }
         if (!empty($cleanQ)) {
             $searchFeedback['keywords'] = $cleanQ;
+            $spoTriplets[] = ['subject' => 'Buku', 'predicate' => 'mengandung_kata_kunci', 'object' => $cleanQ];
         }
 
         return view('user.catalog.index', [
@@ -424,6 +453,7 @@ class SearchEngineController extends Controller
             'smartCategories' => $smartCategories,
             'smartCategoryNames' => $smartCategoryNames,
             'searchFeedback' => $searchFeedback,
+            'spoTriplets' => $spoTriplets,
             'q' => $highlightQuery
         ]);
     }

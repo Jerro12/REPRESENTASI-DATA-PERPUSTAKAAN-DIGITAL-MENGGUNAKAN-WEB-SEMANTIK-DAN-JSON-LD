@@ -81,6 +81,8 @@ Route::middleware(['auth', 'role:admin'])
 
         // Peminjaman
         Route::get('borrowings', [\App\Http\Controllers\Admin\BorrowingController::class, 'index'])->name('borrowings.index');
+        Route::post('borrowings/{borrowing}/approve', [\App\Http\Controllers\Admin\BorrowingController::class, 'approve'])->name('borrowings.approve');
+        Route::post('borrowings/{borrowing}/reject', [\App\Http\Controllers\Admin\BorrowingController::class, 'reject'])->name('borrowings.reject');
         Route::post('borrowings/{borrowing}/return', [\App\Http\Controllers\Admin\BorrowingController::class, 'returnBook'])->name('borrowings.return');
         Route::delete('borrowings/{borrowing}', [\App\Http\Controllers\Admin\BorrowingController::class, 'destroy'])->name('borrowings.destroy');
     });

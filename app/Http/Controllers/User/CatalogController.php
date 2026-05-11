@@ -182,8 +182,16 @@ class CatalogController extends Controller
             ->take(3)
             ->get();
 
+        $activeBorrowing = null;
+        if (auth()->check()) {
+            $activeBorrowing = \App\Models\Borrowing::where('user_id', auth()->id())
+                ->where('book_id', $book->id)
+                ->whereIn('status', ['pending', 'borrowed', 'overdue'])
+                ->first();
+        }
+
         $schema = SchemaHelper::getBookSchema($book);
 
-        return view('user.catalog.show', compact('book', 'relatedBooks', 'schema'));
+        return view('user.catalog.show', compact('book', 'relatedBooks', 'schema', 'activeBorrowing'));
     }
 }   

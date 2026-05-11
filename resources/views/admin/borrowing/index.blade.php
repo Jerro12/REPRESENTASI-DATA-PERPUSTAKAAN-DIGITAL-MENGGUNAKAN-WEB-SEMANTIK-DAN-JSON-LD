@@ -5,7 +5,9 @@
         deleteTitle: '',
         openDelete(borrowing) {
             this.deleteUrl = '{{ url('admin/borrowings') }}/' + borrowing.id;
-            this.deleteTitle = 'Peminjaman ' + borrowing.book.judul + ' oleh ' + borrowing.user.name;
+            const judul = borrowing.book ? borrowing.book.judul : 'Buku Terhapus';
+            const userName = borrowing.user ? borrowing.user.name : 'User Terhapus';
+            this.deleteTitle = 'Peminjaman ' + judul + ' oleh ' + userName;
             this.showDeleteModal = true;
         }
     }">
@@ -51,12 +53,12 @@
                         @forelse ($borrowings as $b)
                             <tr class="hover:bg-secondary/30 transition-colors group">
                                 <td class="px-6 py-4">
-                                    <p class="text-sm font-bold text-foreground">{{ $b->user->name }}</p>
-                                    <p class="text-[10px] text-muted-foreground">{{ $b->user->email }}</p>
+                                    <p class="text-sm font-bold text-foreground">{{ $b->user?->name ?? 'User Terhapus' }}</p>
+                                    <p class="text-[10px] text-muted-foreground">{{ $b->user?->email ?? '-' }}</p>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <p class="text-sm font-bold text-foreground">{{ $b->book->judul }}</p>
-                                    <p class="text-[10px] text-muted-foreground">{{ $b->book->kode_buku }}</p>
+                                    <p class="text-sm font-bold text-foreground">{{ $b->book?->judul ?? 'Buku Terhapus' }}</p>
+                                    <p class="text-[10px] text-muted-foreground">{{ $b->book?->kode_buku ?? '-' }}</p>
                                 </td>
                                 <td class="px-6 py-4 text-sm text-muted-foreground">
                                     {{ $b->borrow_date->format('d M Y') }}
@@ -70,17 +72,36 @@
                                 <td class="px-6 py-4">
                                     @if ($b->status === 'borrowed')
                                         @if($b->due_date < now())
-                                            <span class="badge-danger">Terlambat</span>
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-destructive/10 text-destructive">Terlambat</span>
                                         @else
-                                            <span class="badge-info">Dipinjam</span>
+                                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-primary/10 text-primary">Dipinjam</span>
                                         @endif
-                                    @else
-                                        <span class="badge-success">Dikembalikan</span>
+                                    @elseif ($b->status === 'returned')
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-500">Dikembalikan</span>
+                                    @elseif ($b->status === 'pending')
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500">Menunggu</span>
+                                    @elseif ($b->status === 'rejected')
+                                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-destructive/10 text-destructive">Ditolak</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
                                     <div class="flex gap-2">
-                                        @if($b->status === 'borrowed')
+                                        @if($b->status === 'pending')
+                                            <form action="{{ route('admin.borrowings.approve', $b->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" 
+                                                    class="h-8 px-3 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-bold hover:bg-primary hover:text-primary-foreground transition-all flex items-center gap-1">
+                                                    Setujui
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.borrowings.reject', $b->id) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" 
+                                                    class="h-8 px-3 rounded-lg border border-destructive/20 bg-destructive/5 text-destructive text-xs font-bold hover:bg-destructive hover:text-destructive-foreground transition-all flex items-center gap-1">
+                                                    Tolak
+                                                </button>
+                                            </form>
+                                        @elseif($b->status === 'borrowed')
                                             <form action="{{ route('admin.borrowings.return', $b->id) }}" method="POST">
                                                 @csrf
                                                 <button type="submit" 
@@ -88,12 +109,12 @@
                                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                                     </svg>
-                                                    Kembalikan
+                                                    Kembali
                                                 </button>
                                             </form>
                                         @endif
                                         <button @click="openDelete({{ $b->toJson() }})"
-                                            class="h-8 w-8 rounded-lg border border-destructive/20 flex items-center justify-center hover:bg-destructive/10 transition-all text-destructive">
+                                            class="h-8 w-8 rounded-lg border border-destructive/20 flex items-center justify-center hover:bg-destructive/10 transition-all text-destructive" title="Hapus Riwayat">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                                 <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6" />
                                             </svg>

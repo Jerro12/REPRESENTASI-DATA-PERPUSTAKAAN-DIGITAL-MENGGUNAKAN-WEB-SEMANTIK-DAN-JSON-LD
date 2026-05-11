@@ -13,7 +13,9 @@ class BorrowingController extends Controller
     {
         $search = $request->input('search');
 
-        $borrowings = Borrowing::with(['user', 'book'])
+        $borrowings = Borrowing::with(['user', 'book' => function($q) {
+            $q->withTrashed();
+        }])
             ->when($search, function ($query, $search) {
                 return $query->whereHas('user', function($q) use ($search) {
                     $q->where('name', 'like', "%{$search}%");
@@ -44,10 +46,44 @@ class BorrowingController extends Controller
         return back()->with('success', 'Buku berhasil ditandai sebagai dikembalikan.');
     }
 
+    public function approve(Borrowing $borrowing)
+    {
+        if ($borrowing->status !== 'pending') {
+            return back()->with('error', 'Hanya peminjaman berstatus pending yang dapat disetujui.');
+        }
+
+        $borrowing->update([
+            'status' => 'borrowed',
+            'borrow_date' => Carbon::now(),
+            'due_date' => Carbon::now()->addDays(7), // Update due date to 7 days from approval
+        ]);
+
+        return back()->with('success', 'Peminjaman berhasil disetujui.');
+    }
+
+    public function reject(Borrowing $borrowing)
+    {
+        if ($borrowing->status !== 'pending') {
+            return back()->with('error', 'Hanya peminjaman berstatus pending yang dapat ditolak.');
+        }
+
+        $borrowing->update([
+            'status' => 'rejected',
+        ]);
+
+        // Restore stock
+        $borrowing->book->increment('stok_buku');
+
+        return back()->with('success', 'Peminjaman berhasil ditolak.');
+    }
+
     public function destroy(Borrowing $borrowing)
     {
-        // If deleting a non-returned loan, maybe we should restore stock? 
-        // Usually, we only delete old logs.
+        // If deleting a non-returned and non-rejected loan, we should restore stock
+        if (in_array($borrowing->status, ['pending', 'borrowed', 'overdue'])) {
+            $borrowing->book->increment('stok_buku');
+        }
+        
         $borrowing->delete();
 
         return back()->with('success', 'Data peminjaman berhasil dihapus.');

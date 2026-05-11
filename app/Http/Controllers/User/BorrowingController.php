@@ -17,28 +17,28 @@ class BorrowingController extends Controller
             return back()->with('error', 'Stok buku ini sedang kosong.');
         }
 
-        // Check if user already has an active borrowing for this book
+        // Check if user already has an active or pending borrowing for this book
         $existing = Borrowing::where('user_id', auth()->id())
             ->where('book_id', $book->id)
-            ->where('status', 'borrowed')
+            ->whereIn('status', ['pending', 'borrowed'])
             ->first();
 
         if ($existing) {
-            return back()->with('error', 'Anda sedang meminjam buku ini.');
+            return back()->with('error', 'Anda sudah mengajukan peminjaman atau sedang meminjam buku ini.');
         }
 
-        // Create borrowing record
+        // Create borrowing record with pending status
         Borrowing::create([
             'user_id' => auth()->id(),
             'book_id' => $book->id,
             'borrow_date' => Carbon::now(),
-            'due_date' => Carbon::now()->addDays(7), // Default 7 days
-            'status' => 'borrowed',
+            'due_date' => Carbon::now()->addDays(7), // Default 7 days from now (will be updated when approved)
+            'status' => 'pending',
         ]);
 
-        // Decrement stock
+        // Decrement stock to reserve it
         $book->decrement('stok_buku');
 
-        return back()->with('success', 'Buku berhasil dipinjam. Silakan ambil di perpustakaan.');
+        return back()->with('success', 'Pengajuan pinjam buku berhasil. Silakan tunggu persetujuan admin.');
     }
 }

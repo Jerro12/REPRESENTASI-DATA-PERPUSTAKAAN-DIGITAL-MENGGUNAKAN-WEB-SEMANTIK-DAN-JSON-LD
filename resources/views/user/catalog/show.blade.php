@@ -95,7 +95,6 @@
                             @auth
                                 @php
                                     $isFavored = auth()->user()->favoriteBooks()->where('book_id', $book->id)->exists();
-                                    $isBorrowed = auth()->user()->borrowings()->where('book_id', $book->id)->where('status', 'borrowed')->exists();
                                 @endphp
                                 <form action="{{ route('koleksi.toggle', $book->id) }}" method="POST" class="w-full sm:w-auto">
                                     @csrf
@@ -114,14 +113,24 @@
 
                                 <form action="{{ route('borrowing.store', $book->id) }}" method="POST" class="w-full sm:w-auto">
                                     @csrf
-                                    @if($isBorrowed)
+                                    @if($activeBorrowing && $activeBorrowing->status === 'pending')
+                                        <x-button type="button" variant="outline" size="lg" class="rounded-2xl w-full sm:w-auto border-amber-500/30 text-amber-500 bg-amber-500/5 cursor-not-allowed" disabled>
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                            Menunggu Persetujuan
+                                        </x-button>
+                                    @elseif($activeBorrowing && $activeBorrowing->status === 'borrowed')
                                         <x-button type="button" variant="outline" size="lg" class="rounded-2xl w-full sm:w-auto border-emerald-500/30 text-emerald-500 bg-emerald-500/5 cursor-not-allowed" disabled>
-                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                                             Sedang Dipinjam
+                                        </x-button>
+                                    @elseif($activeBorrowing && $activeBorrowing->status === 'overdue')
+                                        <x-button type="button" variant="outline" size="lg" class="rounded-2xl w-full sm:w-auto border-red-500/30 text-red-500 bg-red-500/5 cursor-not-allowed" disabled>
+                                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                                            Terlambat
                                         </x-button>
                                     @elseif($book->stok_buku > 0)
                                         <x-button type="submit" variant="default" size="lg" class="rounded-2xl shadow-xl shadow-accent/30 w-full sm:w-auto bg-slate-900 text-white hover:bg-slate-800 group/btn">
-                                            <svg class="w-5 h-5 mr-2 transition-transform group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                            <svg class="w-5 h-5 mr-2 transition-transform group-hover/btn:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                             Pinjam Buku
                                         </x-button>
                                     @else
