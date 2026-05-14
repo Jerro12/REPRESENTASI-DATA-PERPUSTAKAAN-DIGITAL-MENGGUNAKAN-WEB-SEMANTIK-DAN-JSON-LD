@@ -71,6 +71,10 @@
                         Koleksi
                         <span class="absolute -bottom-1 left-0 {{ request()->routeIs('koleksi') ? 'w-full' : 'w-0' }} h-0.5 bg-primary transition-all group-hover/link:w-full"></span>
                     </a>
+                    <a href="{{ route('user.profile') }}" class="text-sm font-black {{ request()->routeIs('user.profile') ? 'text-primary' : 'text-muted-foreground hover:text-foreground' }} transition-all relative group/link">
+                        Profil
+                        <span class="absolute -bottom-1 left-0 {{ request()->routeIs('user.profile') ? 'w-full' : 'w-0' }} h-0.5 bg-primary transition-all group-hover/link:w-full"></span>
+                    </a>
                 @endauth
             </div>
 

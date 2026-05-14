@@ -1,6 +1,8 @@
 <x-admin title="Kelola Peminjaman">
     <div class="p-8 animate-fade-in" x-data="{ 
         showDeleteModal: false,
+        showProfileModal: false,
+        studentProfile: null,
         deleteUrl: '',
         deleteTitle: '',
         openDelete(borrowing) {
@@ -9,6 +11,11 @@
             const userName = borrowing.user ? borrowing.user.name : 'User Terhapus';
             this.deleteTitle = 'Peminjaman ' + judul + ' oleh ' + userName;
             this.showDeleteModal = true;
+        },
+        openProfile(user) {
+            if (!user) return;
+            this.studentProfile = user;
+            this.showProfileModal = true;
         }
     }">
         {{-- Header --}}
@@ -113,6 +120,13 @@
                                                 </button>
                                             </form>
                                         @endif
+                                        <button @click="openProfile({{ $b->user ? $b->user->toJson() : 'null' }})"
+                                            class="h-8 w-8 rounded-lg border border-primary/20 flex items-center justify-center hover:bg-primary/10 transition-all text-primary" title="Lihat Profil Siswa">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.644C3.301 7.689 7.488 4.5 12 4.5c4.512 0 8.7 3.189 9.964 7.178.07.207.07.431 0 .638C20.701 16.311 16.512 19.5 12 19.5c-4.512 0-8.7-3.189-9.964-7.178z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            </svg>
+                                        </button>
                                         <button @click="openDelete({{ $b->toJson() }})"
                                             class="h-8 w-8 rounded-lg border border-destructive/20 flex items-center justify-center hover:bg-destructive/10 transition-all text-destructive" title="Hapus Riwayat">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -162,6 +176,58 @@
                     </form>
                     <button @click="showDeleteModal = false" class="flex-1 bg-secondary text-foreground py-3 rounded-xl font-bold hover:bg-border transition-all">
                         Batal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {{-- Student Profile Modal --}}
+        <div x-show="showProfileModal"
+            class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-[110] p-4"
+            x-transition.opacity style="display: none;">
+            <div class="bg-card rounded-2xl w-full max-w-md overflow-hidden animate-scale-in shadow-2xl border border-border" @click.away="showProfileModal = false">
+                <div class="relative h-24 bg-primary/10">
+                    <div class="absolute -bottom-10 left-1/2 -translate-x-1/2">
+                        <div class="w-20 h-20 rounded-2xl bg-primary flex items-center justify-center text-primary-foreground text-3xl font-black shadow-xl border-4 border-card">
+                            <template x-if="studentProfile">
+                                <span x-text="studentProfile.name.charAt(0)"></span>
+                            </template>
+                        </div>
+                    </div>
+                    <button @click="showProfileModal = false" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-black/10 flex items-center justify-center hover:bg-black/20 transition-all text-foreground">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                    </button>
+                </div>
+                
+                <div class="pt-12 pb-8 px-8 text-center">
+                    <template x-if="studentProfile">
+                        <div>
+                            <h3 class="text-xl font-bold text-foreground" x-text="studentProfile.name"></h3>
+                            <p class="text-sm text-muted-foreground" x-text="studentProfile.email"></p>
+                            
+                            <div class="mt-8 space-y-4 text-left">
+                                <div class="p-4 rounded-xl bg-secondary/50 border border-border">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 mb-1">Nomor Induk Siswa (NIS)</p>
+                                    <p class="text-sm font-bold text-foreground" x-text="studentProfile.nis || '-'"></p>
+                                </div>
+                                
+                                <div class="p-4 rounded-xl bg-secondary/50 border border-border">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 mb-1">Nomor Telepon</p>
+                                    <p class="text-sm font-bold text-foreground" x-text="studentProfile.no_telp || '-'"></p>
+                                </div>
+                                
+                                <div class="p-4 rounded-xl bg-secondary/50 border border-border">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-60 mb-1">Alamat</p>
+                                    <p class="text-sm font-bold text-foreground" x-text="studentProfile.alamat || '-'"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                
+                <div class="px-8 pb-8">
+                    <button @click="showProfileModal = false" class="w-full bg-secondary text-foreground py-3 rounded-xl font-bold hover:bg-border transition-all">
+                        Tutup
                     </button>
                 </div>
             </div>

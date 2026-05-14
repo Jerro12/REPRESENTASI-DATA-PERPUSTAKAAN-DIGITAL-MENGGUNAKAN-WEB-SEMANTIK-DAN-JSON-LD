@@ -44,6 +44,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/pinjam/{book}', [BorrowingController::class, 'store'])
         ->name('borrowing.store');
+
+    // Profile User (Halaman Utama Profil)
+    Route::get('/profil-saya', [\App\Http\Controllers\User\UserProfileController::class, 'index'])
+        ->name('user.profile');
 });
 
 
