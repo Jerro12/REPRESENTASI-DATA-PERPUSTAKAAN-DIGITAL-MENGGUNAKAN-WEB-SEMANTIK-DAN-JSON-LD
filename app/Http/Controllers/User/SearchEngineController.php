@@ -101,6 +101,20 @@ class SearchEngineController extends Controller
             // ====================================================
             // STEP 3: ENTITY EXTRACTION
             // ====================================================
+            $stopWords = [
+                'buku', 'novel', 'komik', 'majalah', 'jurnal', 'makalah', 'skripsi', 'artikel', 'karya', 'bacaan', 'literatur',
+                'saya', 'suka', 'baca', 'membaca', 'mencari', 'minta', 'tolong', 'cari', 'carikan', 'butuh', 'recommend', 'rekomendasi',
+                'lihat', 'menampilkan', 'tampilkan', 'menemukan', 'temukan', 'pengen', 'ingin', 'inginkan', 'mau', 'dapat', 'dapatkan',
+                'pilih', 'berikan', 'kasih', 'bantu', 'coba',
+                'yang', 'pada', 'tentang', 'kategori', 'penulis', 'judul', 'tema', 'genre', 'topik', 'bidang', 'jenis', 'tipe', 'seri',
+                'di', 'dan', 'atau', 'serta', 'ke', 'dari', 'untuk', 'adalah', 'ini', 'itu', 'buat', 'seputar', 'mengenai', 'terkait', 'sampai',
+                'ada', 'tidak', 'berjudul', 'oleh', 'karangan', 'penerbit', 'terbitan', 'tahun', 'terbit', 'edisi', 'volume', 'jilid', 
+                'hal', 'halaman', 'bab', 'nomor', 'apakah', 'siapa', 'apa', 'saja', 'daftar', 'koleksi', 'info', 'bagaimana', 'mana', 
+                'dimana', 'kapan', 'punya', 'gak', 'dong', 'sih', 'ya', 'no', 'dong', 'deh',
+                'ditulis', 'dibuat', 'dikarang', 'diterbitkan', 'dicetak', 'kenapa', 'mengapa', 'gimana', 'gmn', 'tulis', 'karang', 'bikin',
+                'min', 'halo', 'hai', 'isinya', 'membahas', 'aja', 'kak', 'bang', 'pak', 'bu', 'judulnya', 'penulisnya', 'penerbitnya',
+                'nggak', 'ngga', 'caranya', 'bahas', 'bahasnya', 'paling', 'sangat', 'amat', 'ter'
+            ];
 
             // -- 3a. Deteksi Tahun --
             if (preg_match('/\b(19|20)\d{2}\b/', $cleanQ, $matches)) {
@@ -153,6 +167,8 @@ class SearchEngineController extends Controller
                     $queryWords = array_filter(explode(' ', $lowerQ), fn($w) => strlen(trim($w)) > 3);
                     foreach ($queryWords as $word) {
                         $word = trim($word);
+                        if (in_array($word, $stopWords)) continue; // Abaikan stopword untuk fuzzy match
+                        
                         // Cek fuzzy terhadap nama kategori lengkap
                         if (levenshtein($word, $catName) <= 2 && levenshtein($word, $catName) > 0) {
                             $smartCategories[] = $category->id;
@@ -197,20 +213,6 @@ class SearchEngineController extends Controller
             // ====================================================
             // STEP 4: STOP WORD REMOVAL
             // ====================================================
-            $stopWords = [
-                'buku', 'novel', 'komik', 'majalah', 'jurnal', 'makalah', 'skripsi', 'artikel', 'karya', 'bacaan', 'literatur',
-                'saya', 'suka', 'baca', 'membaca', 'mencari', 'minta', 'tolong', 'cari', 'carikan', 'butuh', 'recommend', 'rekomendasi',
-                'lihat', 'menampilkan', 'tampilkan', 'menemukan', 'temukan', 'pengen', 'ingin', 'inginkan', 'mau', 'dapat', 'dapatkan',
-                'pilih', 'berikan', 'kasih', 'bantu', 'coba',
-                'yang', 'pada', 'tentang', 'kategori', 'penulis', 'judul', 'tema', 'genre', 'topik', 'bidang', 'jenis', 'tipe', 'seri',
-                'di', 'dan', 'atau', 'serta', 'ke', 'dari', 'untuk', 'adalah', 'ini', 'itu', 'buat', 'seputar', 'mengenai', 'terkait', 'sampai',
-                'ada', 'tidak', 'berjudul', 'oleh', 'karangan', 'penerbit', 'terbitan', 'tahun', 'terbit', 'edisi', 'volume', 'jilid', 
-                'hal', 'halaman', 'bab', 'nomor', 'apakah', 'siapa', 'apa', 'saja', 'daftar', 'koleksi', 'info', 'bagaimana', 'mana', 
-                'dimana', 'kapan', 'punya', 'gak', 'dong', 'sih', 'ya', 'no', 'dong', 'deh',
-                'ditulis', 'dibuat', 'dikarang', 'diterbitkan', 'dicetak', 'kenapa', 'mengapa', 'gimana', 'gmn',
-                'min', 'halo', 'hai', 'isinya', 'membahas', 'aja', 'kak', 'bang', 'pak', 'bu', 'judulnya', 'penulisnya', 'penerbitnya',
-                'nggak', 'ngga', 'caranya', 'bahas', 'bahasnya', 'paling', 'sangat', 'amat', 'ter'
-            ];
             
             foreach ($stopWords as $word) {
                 $cleanQ = preg_replace('/\b' . $word . '\b/i', '', $cleanQ);
