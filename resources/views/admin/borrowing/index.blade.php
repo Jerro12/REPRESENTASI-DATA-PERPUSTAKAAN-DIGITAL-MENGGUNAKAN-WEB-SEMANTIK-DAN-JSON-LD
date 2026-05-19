@@ -53,6 +53,7 @@
                             <th class="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Batas Kembali</th>
                             <th class="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Tgl Kembali</th>
                             <th class="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Status</th>
+                            <th class="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Denda</th>
                             <th class="text-left px-6 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Aksi</th>
                         </tr>
                     </thead>
@@ -89,6 +90,20 @@
                                         <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/10 text-amber-500">Menunggu</span>
                                     @elseif ($b->status === 'rejected')
                                         <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-destructive/10 text-destructive">Ditolak</span>
+                                    @endif
+                                </td>
+                                <td class="px-6 py-4">
+                                    @php
+                                        $denda = $b->denda;
+                                        if ($b->status === 'borrowed' && \Carbon\Carbon::now()->startOfDay()->greaterThan(\Carbon\Carbon::parse($b->due_date)->startOfDay())) {
+                                            $lateDays = \Carbon\Carbon::parse($b->due_date)->startOfDay()->diffInDays(\Carbon\Carbon::now()->startOfDay());
+                                            $denda = $lateDays * 2000;
+                                        }
+                                    @endphp
+                                    @if($denda > 0)
+                                        <span class="text-sm font-bold text-destructive">Rp {{ number_format($denda, 0, ',', '.') }}</span>
+                                    @else
+                                        <span class="text-sm text-muted-foreground">-</span>
                                     @endif
                                 </td>
                                 <td class="px-6 py-4">
@@ -138,7 +153,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="text-center py-12 text-muted-foreground">Tidak ada data peminjaman ditemukan</td>
+                                <td colspan="8" class="text-center py-12 text-muted-foreground">Tidak ada data peminjaman ditemukan</td>
                             </tr>
                         @endforelse
                     </tbody>

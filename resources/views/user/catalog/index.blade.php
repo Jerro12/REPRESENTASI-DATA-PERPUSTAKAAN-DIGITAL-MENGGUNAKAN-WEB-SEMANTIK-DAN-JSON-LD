@@ -108,7 +108,7 @@
             <!-- Results -->
             <div class="flex-1">
                 {{-- ====== SEARCH FEEDBACK PANEL (seperti Google) ====== --}}
-                @if(request('q') && !empty($searchFeedback))
+                <!-- @if(request('q') && !empty($searchFeedback))
                     <div class="mb-6 p-4 bg-card border border-border rounded-2xl shadow-sm" style="border-left: 4px solid hsl(213 100% 26%);">
                         <div class="flex items-start gap-3">
                             <div class="mt-0.5">
@@ -189,7 +189,7 @@
                             </div>
                         </div>
                     </div>
-                @endif
+                @endif -->
 
                 <div class="flex items-center justify-between mb-6">
                     <p class="text-sm font-medium text-slate-600">

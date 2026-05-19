@@ -141,6 +141,7 @@
                                     <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Tgl Pinjam</th>
                                     <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50">Tgl Kembali</th>
                                     <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50 text-center">Status</th>
+                                    <th class="px-6 py-5 text-[10px] font-black uppercase tracking-widest text-muted-foreground opacity-50 text-center">Denda</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-border/50">
@@ -149,7 +150,7 @@
                                         <td class="px-6 py-5">
                                             <div class="flex items-center gap-4">
                                                 <div class="w-10 h-14 rounded-lg bg-secondary shrink-0 overflow-hidden shadow-sm group-hover:scale-105 transition-transform duration-500">
-                                                    @if($borrowing->book->cover)
+                                                    @if($borrowing->book?->cover)
                                                         <img src="{{ asset('storage/' . $borrowing->book->cover) }}" alt="" class="w-full h-full object-cover">
                                                     @else
                                                         <div class="w-full h-full flex items-center justify-center">
@@ -158,8 +159,8 @@
                                                     @endif
                                                 </div>
                                                 <div>
-                                                    <p class="font-black text-sm text-foreground mb-0.5 line-clamp-1 max-w-[150px] md:max-w-[200px]">{{ $borrowing->book->judul }}</p>
-                                                    <p class="text-xs text-muted-foreground opacity-60">{{ $borrowing->book->penulis }}</p>
+                                                    <p class="font-black text-sm text-foreground mb-0.5 line-clamp-1 max-w-[150px] md:max-w-[200px]">{{ $borrowing->book?->judul ?? 'Buku Terhapus' }}</p>
+                                                    <p class="text-xs text-muted-foreground opacity-60">{{ $borrowing->book?->penulis ?? '-' }}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -190,10 +191,24 @@
                                                 {{ $statusLabels[$borrowing->status] ?? $borrowing->status }}
                                             </span>
                                         </td>
+                                        <td class="px-6 py-5 text-center">
+                                            @php
+                                                $denda = $borrowing->denda;
+                                                if ($borrowing->status === 'borrowed' && \Carbon\Carbon::now()->startOfDay()->greaterThan(\Carbon\Carbon::parse($borrowing->due_date)->startOfDay())) {
+                                                    $lateDays = \Carbon\Carbon::parse($borrowing->due_date)->startOfDay()->diffInDays(\Carbon\Carbon::now()->startOfDay());
+                                                    $denda = $lateDays * 2000;
+                                                }
+                                            @endphp
+                                            @if($denda > 0)
+                                                <span class="text-sm font-bold text-rose-500">Rp {{ number_format($denda, 0, ',', '.') }}</span>
+                                            @else
+                                                <span class="text-sm font-bold text-muted-foreground/50">-</span>
+                                            @endif
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="4" class="px-8 py-24 text-center">
+                                        <td colspan="5" class="px-8 py-24 text-center">
                                             <div class="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mx-auto mb-4">
                                                 <svg class="w-8 h-8 text-muted-foreground/30" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.247 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" stroke-width="2"/></svg>
                                             </div>

@@ -35,9 +35,19 @@ class BorrowingController extends Controller
             return back()->with('error', 'Buku ini sudah dikembalikan.');
         }
 
+        $dueDate = Carbon::parse($borrowing->due_date)->startOfDay();
+        $returnDate = Carbon::now()->startOfDay();
+        $denda = 0;
+
+        if ($returnDate->greaterThan($dueDate)) {
+            $lateDays = $dueDate->diffInDays($returnDate);
+            $denda = $lateDays * 2000;
+        }
+
         $borrowing->update([
             'status' => 'returned',
             'return_date' => Carbon::now(),
+            'denda' => $denda,
         ]);
 
         // Restore stock
@@ -55,7 +65,7 @@ class BorrowingController extends Controller
         $borrowing->update([
             'status' => 'borrowed',
             'borrow_date' => Carbon::now(),
-            'due_date' => Carbon::now()->addDays(7), // Update due date to 7 days from approval
+            'due_date' => Carbon::now()->addDays(5), // Update due date to 5 days from approval
         ]);
 
         return back()->with('success', 'Peminjaman berhasil disetujui.');

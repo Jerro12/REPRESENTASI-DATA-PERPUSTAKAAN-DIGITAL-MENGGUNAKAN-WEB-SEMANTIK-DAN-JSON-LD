@@ -32,7 +32,7 @@ class BorrowingController extends Controller
             'user_id' => auth()->id(),
             'book_id' => $book->id,
             'borrow_date' => Carbon::now(),
-            'due_date' => Carbon::now()->addDays(7), // Default 7 days from now (will be updated when approved)
+            'due_date' => Carbon::now()->addDays(5), // Default 5 days from now (will be updated when approved)
             'status' => 'pending',
         ]);
 

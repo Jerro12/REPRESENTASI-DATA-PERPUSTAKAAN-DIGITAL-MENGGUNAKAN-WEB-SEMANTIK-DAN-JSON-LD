@@ -14,7 +14,9 @@ class UserProfileController extends Controller
         $user = Auth::user();
         
         // Ambil riwayat peminjaman
-        $borrowings = Borrowing::with('book')
+        $borrowings = Borrowing::with(['book' => function($q) {
+            $q->withTrashed();
+        }])
             ->where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->get();
