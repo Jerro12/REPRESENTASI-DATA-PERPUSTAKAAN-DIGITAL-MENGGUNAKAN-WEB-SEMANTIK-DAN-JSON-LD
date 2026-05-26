@@ -24,7 +24,7 @@
 
                 <form method="POST" action="{{ route('logout') }}" class="w-full sm:w-auto">
                     @csrf
-                    <button type="submit" class="w-full sm:w-auto text-xs font-bold text-muted-foreground hover:text-foreground transition-colors px-4 py-2 border border-transparent hover:border-border rounded-xl transition-all">
+                    <button type="submit" class="w-full sm:w-auto text-xs font-bold text-muted-foreground hover:text-foreground px-4 py-2 border border-transparent hover:border-border rounded-xl transition-all">
                         Keluar Akun
                     </button>
                 </form>

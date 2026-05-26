@@ -50,7 +50,7 @@
                 </div>
 
                 <!-- Delete User -->
-                <div id="delete-account" class="bg-card border border-rose-500/20 rounded-[2.5rem] p-8 md:p-12 shadow-sm bg-rose-500/[0.02]">
+                <div id="delete-account" class="border border-rose-500/20 rounded-[2.5rem] p-8 md:p-12 shadow-sm bg-rose-500/[0.02]">
                     <div class="max-w-xl">
                         @include('profile.partials.delete-user-form')
                     </div>
