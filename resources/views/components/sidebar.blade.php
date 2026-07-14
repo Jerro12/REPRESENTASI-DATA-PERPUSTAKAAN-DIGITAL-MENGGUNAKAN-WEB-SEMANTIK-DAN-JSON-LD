@@ -25,7 +25,8 @@
                 
                 @php
                     $menuItems = [
-                        ['label' => 'Dashboard', 'route' => 'admin/dashboard', 'active' => request()->is('admin/dashboard'), 'icon' => 'grid'],
+                        ['label' => 'Dashboard', 'href' => route('admin.dashboard'), 'active' => request()->routeIs('admin.dashboard'), 'icon' => 'grid'],
+                        ['label' => 'Data Siswa', 'href' => route('admin.students.index'), 'active' => request()->routeIs('admin.students.*'), 'icon' => 'users'],
                         ['label' => 'Data Buku', 'href' => route('admin.books.index'), 'active' => request()->routeIs('admin.books.*'), 'icon' => 'book'],
                         ['label' => 'Kategori', 'href' => route('admin.categories.index'), 'active' => request()->routeIs('admin.categories.*'), 'icon' => 'tags'],
                         ['label' => 'Peminjaman', 'href' => route('admin.borrowings.index'), 'active' => request()->routeIs('admin.borrowings.*'), 'icon' => 'clock'],
@@ -40,6 +41,8 @@
                         <div class="shrink-0 group-hover:scale-110 transition-transform">
                             @if($item['icon'] == 'grid')
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                            @elseif($item['icon'] == 'users')
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                             @elseif($item['icon'] == 'book')
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z" /></svg>
                             @elseif($item['icon'] == 'tags')

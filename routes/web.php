@@ -14,6 +14,9 @@ use App\Http\Controllers\LandingController;
 
 Route::get('/', [LandingController::class, 'index']);
 
+// API Route untuk Cek NIS
+Route::get('/api/check-nis', \App\Http\Controllers\Api\CheckNisController::class)->name('api.check-nis');
+
 // Daftar Kategori
 Route::get('/kategori-buku', [App\Http\Controllers\User\UserCategoryController::class, 'index'])
     ->name('kategori.index');
@@ -89,6 +92,11 @@ Route::middleware(['auth', 'role:admin'])
         Route::post('borrowings/{borrowing}/reject', [\App\Http\Controllers\Admin\BorrowingController::class, 'reject'])->name('borrowings.reject');
         Route::post('borrowings/{borrowing}/return', [\App\Http\Controllers\Admin\BorrowingController::class, 'returnBook'])->name('borrowings.return');
         Route::delete('borrowings/{borrowing}', [\App\Http\Controllers\Admin\BorrowingController::class, 'destroy'])->name('borrowings.destroy');
+
+        // Master Data Siswa
+        Route::get('students/export-template', [\App\Http\Controllers\Admin\StudentController::class, 'exportTemplate'])->name('students.export_template');
+        Route::post('students/import', [\App\Http\Controllers\Admin\StudentController::class, 'import'])->name('students.import');
+        Route::resource('students', \App\Http\Controllers\Admin\StudentController::class);
     });
 
 require __DIR__ . '/auth.php';

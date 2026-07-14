@@ -30,26 +30,29 @@ class RegisteredUserController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'nis' => ['required', 'string', 'max:50', 'unique:'.User::class],
-            'name' => ['required', 'string', 'max:255'],
-            'tempat_lahir' => ['required', 'string', 'max:255'],
-            'tanggal_lahir' => ['required', 'date'],
-            'alamat' => ['required', 'string'],
-            'no_telp' => ['required', 'string', 'max:20'],
+            'nis' => ['required', 'string', 'max:255', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Pastikan NIS ada di master data siswa
+        $student = \App\Models\Student::where('nis', $request->nis)->first();
+        if (!$student) {
+            return back()->withInput()->withErrors(['nis' => 'NIS tidak terdaftar sebagai siswa sekolah.']);
+        }
+
         $user = User::create([
-            'nis' => $request->nis,
-            'name' => $request->name,
-            'tempat_lahir' => $request->tempat_lahir,
-            'tanggal_lahir' => $request->tanggal_lahir,
-            'alamat' => $request->alamat,
-            'no_telp' => $request->no_telp,
+            'nis' => $student->nis,
+            'name' => $student->nama,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'tempat_lahir' => $student->tempat_lahir,
+            'tanggal_lahir' => $student->tanggal_lahir,
+            'alamat' => $student->alamat,
+            'no_telp' => $student->no_telp,
         ]);
+
+        $user->assignRole('user');
 
         event(new Registered($user));
 
